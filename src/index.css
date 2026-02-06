@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --color-aviation-black: #1a1a1a;
+  --color-aviation-blue: #003366;
+  --color-aviation-gray: #f4f4f9;
+  --color-aviation-sky: #87CEEB;
+  --color-aviation-warning: #FFA500;
+  --color-aviation-alert: #EF4444;
+  --color-aviation-success: #22C55E;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  
+  :root.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-aviation-gray text-aviation-black antialiased;
+  }
+}
