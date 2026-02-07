@@ -28,27 +28,38 @@ interface CGChartProps {
     isWithinLimits: boolean;
     landingWeight?: number;
     landingCG?: number;
+    envelopePoints?: { x: number; y: number }[];
 }
 
-export default function CGChart({ currentWeight, currentCG, isWithinLimits, landingWeight, landingCG }: CGChartProps) {
+export default function CGChart({ currentWeight, currentCG, isWithinLimits, landingWeight, landingCG, envelopePoints }: CGChartProps) {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
 
     const data = useMemo(() => {
-        const envelopePoints = [
+        const points = envelopePoints || [
             { x: 35.0, y: 1500 },
-            { x: 35.0, y: 2050 },
-            { x: 41.0, y: 2550 },
-            { x: 47.3, y: 2550 },
+            { x: 35.0, y: 1950 }, // Generic fallback
+            { x: 40.0, y: 2400 },
+            { x: 47.3, y: 2400 },
             { x: 47.3, y: 1500 },
-            { x: 35.0, y: 1500 }, // Close the loop
+            { x: 35.0, y: 1500 },
         ];
+
+        // Ensure the loop is closed if the provided points don't close it
+        const plotPoints = [...points];
+        if (points.length > 0) {
+            const first = points[0];
+            const last = points[points.length - 1];
+            if (first.x !== last.x || first.y !== last.y) {
+                plotPoints.push(first);
+            }
+        }
 
         return {
             datasets: [
                 {
                     label: 'Normal Category Envelope',
-                    data: envelopePoints,
+                    data: plotPoints,
                     borderColor: isDark ? 'rgba(96, 165, 250, 0.8)' : 'rgba(54, 162, 235, 0.5)',
                     backgroundColor: isDark ? 'rgba(96, 165, 250, 0.15)' : 'rgba(54, 162, 235, 0.1)',
                     showLine: true,
@@ -76,7 +87,7 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
                 }
             ]
         };
-    }, [currentWeight, currentCG, isWithinLimits, landingWeight, landingCG, isDark]);
+    }, [currentWeight, currentCG, isWithinLimits, landingWeight, landingCG, isDark, envelopePoints]);
 
     const options = {
         scales: {
@@ -88,11 +99,13 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
                     text: 'Center of Gravity (Inches Aft of Datum)',
                     color: isDark ? '#9ca3af' : '#666'
                 },
-                ticks: {
-                    color: isDark ? '#9ca3af' : '#666'
-                },
                 grid: {
-                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                    lineWidth: 0.5,
+                },
+                ticks: {
+                    color: isDark ? '#9ca3af' : '#666',
+                    stepSize: 1,
                 },
                 min: 30,
                 max: 55,
@@ -105,10 +118,12 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
                     color: isDark ? '#9ca3af' : '#666'
                 },
                 ticks: {
-                    color: isDark ? '#9ca3af' : '#666'
+                    color: isDark ? '#9ca3af' : '#666',
+                    stepSize: 50,
                 },
                 grid: {
-                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                    lineWidth: 0.5,
                 },
                 min: 1400,
                 max: 2700,

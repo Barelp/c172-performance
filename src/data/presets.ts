@@ -24,10 +24,18 @@ export const PRESET_AIRCRAFT: Record<string, Aircraft> = {
             fuel: 48.0,
         },
         cgLimits: {
-            fwd_low: { weight: 2050, arm: 35.0 },
-            fwd_high: { weight: 2550, arm: 41.0 },
+            fwd_low: { weight: 1500, arm: 35.0 },
+            fwd_high: { weight: 2550, arm: 39.6 },
             aft: 47.3,
         },
+        envelopePoints: [
+            { x: 35.0, y: 1500 },
+            { x: 35.0, y: 1960 },
+            { x: 39.6, y: 2550 },
+            { x: 47.3, y: 2550 },
+            { x: 47.3, y: 1500 },
+            { x: 35.0, y: 1500 }
+        ],
     },
     '4x-cdj': {
         id: '4x-cdj',
@@ -71,7 +79,7 @@ export const PRESET_AIRCRAFT: Record<string, Aircraft> = {
         maxTotalBaggageWeight: 120,
         maxFrontSeatWeight: 400,
         maxRearSeatWeight: 400,
-        maxTakeoffWeight: 2400,
+        maxTakeoffWeight: 2300,
         stationArms: {
             pilot_front_pax: 37.0,
             rear_pax: 73.0,
@@ -80,10 +88,18 @@ export const PRESET_AIRCRAFT: Record<string, Aircraft> = {
             fuel: 48.0,
         },
         cgLimits: {
-            fwd_low: { weight: 1950, arm: 35.0 },
-            fwd_high: { weight: 2400, arm: 39.2 },
+            fwd_low: { weight: 1500, arm: 35.0 },
+            fwd_high: { weight: 2300, arm: 39.6 },
             aft: 47.3,
         },
+        envelopePoints: [
+            { x: 35.0, y: 1500 },
+            { x: 35.0, y: 1960 },
+            { x: 39.6, y: 2300 },
+            { x: 47.3, y: 2300 },
+            { x: 47.3, y: 1500 },
+            { x: 35.0, y: 1500 }
+        ],
     },
     '4x-chl': {
         id: '4x-chl',
@@ -127,7 +143,7 @@ export const PRESET_AIRCRAFT: Record<string, Aircraft> = {
         maxTotalBaggageWeight: 120,
         maxFrontSeatWeight: 400,
         maxRearSeatWeight: 400,
-        maxTakeoffWeight: 2400,
+        maxTakeoffWeight: 2550,
         stationArms: {
             pilot_front_pax: 37.0,
             rear_pax: 73.0,
@@ -136,10 +152,18 @@ export const PRESET_AIRCRAFT: Record<string, Aircraft> = {
             fuel: 48.0,
         },
         cgLimits: {
-            fwd_low: { weight: 1950, arm: 35.0 },
-            fwd_high: { weight: 2400, arm: 39.2 },
+            fwd_low: { weight: 1500, arm: 35.0 },
+            fwd_high: { weight: 2550, arm: 39.6 },
             aft: 47.3,
         },
+        envelopePoints: [
+            { x: 35.0, y: 1500 },
+            { x: 35.0, y: 1960 },
+            { x: 39.6, y: 2550 },
+            { x: 47.3, y: 2550 },
+            { x: 47.3, y: 1500 },
+            { x: 35.0, y: 1500 }
+        ],
     },
     'default': {
         id: 'default-172s',
@@ -168,6 +192,14 @@ export const PRESET_AIRCRAFT: Record<string, Aircraft> = {
             fwd_high: { weight: 2550, arm: 41.0 },
             aft: 47.3,
         },
+        envelopePoints: [
+            { x: 35.0, y: 1500 },
+            { x: 35.0, y: 2050 },
+            { x: 41.0, y: 2550 },
+            { x: 47.3, y: 2550 },
+            { x: 47.3, y: 1500 },
+            { x: 35.0, y: 1500 }
+        ],
     },
 };
 

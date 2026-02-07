@@ -371,6 +371,7 @@ export default function WBCalculator() {
               isWithinLimits={results.isWithinLimits}
               landingWeight={results.landingWeight}
               landingCG={results.landingCG}
+              envelopePoints={aircraft.envelopePoints}
             />
           </div>
 

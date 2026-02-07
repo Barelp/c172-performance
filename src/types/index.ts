@@ -27,6 +27,7 @@ export interface Aircraft {
         fwd_high: { weight: number; arm: number }; // e.g. 41.0" at 2550 lbs
         aft: number; // Static aft limit
     };
+    envelopePoints?: { x: number; y: number }[]; // Custom polygon points (Arm=x, Weight=y)
 }
 
 export interface StationArm {

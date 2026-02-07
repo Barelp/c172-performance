@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import type { FlightLog, Aircraft, CalculationResult, UnitSystem } from '../types';
 import { DEFAULT_AIRCRAFT } from '../data/c172s';
+import { getPresetAircraft } from '../data/presets';
 
 export const KG_TO_LBS = 2.20462;
 export const GAL_TO_LITER = 3.78541;
@@ -25,7 +26,24 @@ export function useWeightAndBalance(initialFlight?: FlightLog) {
 
     const [aircraft, setAircraft] = useState<Aircraft>(() => {
         const stored = localStorage.getItem('c172_aircraft_config');
-        return stored ? JSON.parse(stored) : DEFAULT_AIRCRAFT;
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            // Refresh static data from preset if available to get latest envelope/limits
+            const preset = getPresetAircraft(parsed.id);
+            if (preset) {
+                return {
+                    ...parsed,
+                    // Updates limits and envelope from code, keeping user's weight/arm edits if any
+                    maxTakeoffWeight: preset.maxTakeoffWeight,
+                    cgLimits: preset.cgLimits,
+                    envelopePoints: preset.envelopePoints,
+                    stationArms: preset.stationArms,
+                    // basicEmptyWeight/Arm are preserved from 'parsed' as user might have customized them
+                };
+            }
+            return parsed;
+        }
+        return DEFAULT_AIRCRAFT;
     });
 
     // Persist aircraft config changes
