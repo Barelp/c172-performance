@@ -132,8 +132,8 @@ export const PRESET_AIRCRAFT: Record<string, Aircraft> = {
     '4x-cwz': {
         id: '4x-cwz',
         tailNumber: '4X-CWZ',
-        basicEmptyWeight: 1500.0,
-        basicEmptyMoment: 57750.0,
+        basicEmptyWeight: 1502.0,
+        basicEmptyMoment: 57827.0,
         emptyWeightArm: 38.5,
         fuelCapacity: 40.0,
         usableFuelPerGal: 6.0,
@@ -161,6 +161,42 @@ export const PRESET_AIRCRAFT: Record<string, Aircraft> = {
             { x: 35.0, y: 1960 },
             { x: 39.6, y: 2550 },
             { x: 47.3, y: 2550 },
+            { x: 47.3, y: 1500 },
+            { x: 35.0, y: 1500 }
+        ],
+    },
+    '4x-cau': {
+        id: '4x-cau',
+        tailNumber: '4X-CAU',
+        basicEmptyWeight: 1541.0,
+        basicEmptyMoment: 1541.0 * 38.6,
+        emptyWeightArm: 38.6,
+        fuelCapacity: 50.0,
+        usableFuelPerGal: 6.0,
+        datumLocation: 'Lower portion of front face of firewall',
+        maxBaggage1Weight: 120,
+        maxBaggage2Weight: 50,
+        maxTotalBaggageWeight: 120,
+        maxFrontSeatWeight: 400,
+        maxRearSeatWeight: 400,
+        maxTakeoffWeight: 2400,
+        stationArms: {
+            pilot_front_pax: 37.0,
+            rear_pax: 73.0,
+            baggage_1: 95.0,
+            baggage_2: 123.0,
+            fuel: 48.0,
+        },
+        cgLimits: {
+            fwd_low: { weight: 1950, arm: 35.0 }, // Standard C172 lower bound
+            fwd_high: { weight: 2400, arm: 39.2 }, // Interpolated/Standard for 2400lbs
+            aft: 47.3,
+        },
+        envelopePoints: [
+            { x: 35.0, y: 1500 },
+            { x: 35.0, y: 1950 },
+            { x: 39.2, y: 2400 },
+            { x: 47.3, y: 2400 },
             { x: 47.3, y: 1500 },
             { x: 35.0, y: 1500 }
         ],

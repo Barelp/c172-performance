@@ -31,6 +31,11 @@ export function useWeightAndBalance(initialFlight?: FlightLog) {
             // Refresh static data from preset if available to get latest envelope/limits
             const preset = getPresetAircraft(parsed.id);
             if (preset) {
+                // FIX: Force update for 4X-CWZ if it has the old weight
+                if (parsed.id === '4x-cwz' && parsed.basicEmptyWeight === 1500) {
+                    return preset;
+                }
+
                 return {
                     ...parsed,
                     // Updates limits and envelope from code, keeping user's weight/arm edits if any

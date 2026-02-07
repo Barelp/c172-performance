@@ -372,6 +372,7 @@ export default function WBCalculator() {
               landingWeight={results.landingWeight}
               landingCG={results.landingCG}
               envelopePoints={aircraft.envelopePoints}
+              unitPreference={flight.unitPreference}
             />
           </div>
 
@@ -743,14 +744,15 @@ export default function WBCalculator() {
                 <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-4 overflow-hidden flex-1 transition-colors">
                   <StationDiagram
                     emptyWeight={aircraft.basicEmptyWeight}
-                    pilotWeight={flight.pilotWeight}
-                    frontPaxWeight={flight.frontPaxWeight}
-                    rearPax1Weight={flight.rearPax1Weight}
-                    rearPax2Weight={flight.rearPax2Weight}
-                    baggage1Weight={flight.baggage1Weight}
-                    baggage2Weight={flight.baggage2Weight}
+                    pilotWeight={toLbs(flight.pilotWeight, flight.unitPreference)}
+                    frontPaxWeight={toLbs(flight.frontPaxWeight, flight.unitPreference)}
+                    rearPax1Weight={toLbs(flight.rearPax1Weight, flight.unitPreference)}
+                    rearPax2Weight={toLbs(flight.rearPax2Weight, flight.unitPreference)}
+                    baggage1Weight={toLbs(flight.baggage1Weight, flight.unitPreference)}
+                    baggage2Weight={toLbs(flight.baggage2Weight, flight.unitPreference)}
                     fuelLeftWeight={flight.fuelLeftGallons * aircraft.usableFuelPerGal}
                     fuelRightWeight={flight.fuelRightGallons * aircraft.usableFuelPerGal}
+                    unitPreference={flight.unitPreference}
                   />
                 </div>
               </div>

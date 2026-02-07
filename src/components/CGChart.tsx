@@ -29,11 +29,16 @@ interface CGChartProps {
     landingWeight?: number;
     landingCG?: number;
     envelopePoints?: { x: number; y: number }[];
+    unitPreference?: 'LBS' | 'KG';
 }
 
-export default function CGChart({ currentWeight, currentCG, isWithinLimits, landingWeight, landingCG, envelopePoints }: CGChartProps) {
+export default function CGChart({ currentWeight, currentCG, isWithinLimits, landingWeight, landingCG, envelopePoints, unitPreference = 'LBS' }: CGChartProps) {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
+    const isKg = unitPreference === 'KG';
+    const weightFactor = isKg ? 1 / 2.20462 : 1;
+
+    const convertWeight = (lbs: number) => lbs * weightFactor;
 
     const data = useMemo(() => {
         const points = envelopePoints || [
@@ -55,11 +60,14 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
             }
         }
 
+        // Convert envelope points to current unit
+        const convertedPoints = plotPoints.map(p => ({ x: p.x, y: convertWeight(p.y) }));
+
         return {
             datasets: [
                 {
                     label: 'Normal Category Envelope',
-                    data: plotPoints,
+                    data: convertedPoints,
                     borderColor: isDark ? 'rgba(96, 165, 250, 0.8)' : 'rgba(54, 162, 235, 0.5)',
                     backgroundColor: isDark ? 'rgba(96, 165, 250, 0.15)' : 'rgba(54, 162, 235, 0.1)',
                     showLine: true,
@@ -69,7 +77,7 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
                 },
                 {
                     label: 'Current Flight',
-                    data: [{ x: currentCG, y: currentWeight }],
+                    data: [{ x: currentCG, y: convertWeight(currentWeight) }],
                     backgroundColor: isWithinLimits ? (isDark ? '#4ade80' : 'green') : (isDark ? '#f87171' : 'red'),
                     borderColor: isWithinLimits ? (isDark ? '#4ade80' : 'green') : (isDark ? '#f87171' : 'red'),
                     pointRadius: 6,
@@ -78,7 +86,7 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
                 },
                 {
                     label: 'Landing',
-                    data: landingWeight && landingCG ? [{ x: landingCG, y: landingWeight }] : [],
+                    data: landingWeight && landingCG ? [{ x: landingCG, y: convertWeight(landingWeight) }] : [],
                     backgroundColor: isDark ? '#fb923c' : 'orange',
                     borderColor: isDark ? '#fb923c' : 'orange',
                     pointRadius: 6,
@@ -87,7 +95,7 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
                 }
             ]
         };
-    }, [currentWeight, currentCG, isWithinLimits, landingWeight, landingCG, isDark, envelopePoints]);
+    }, [currentWeight, currentCG, isWithinLimits, landingWeight, landingCG, isDark, envelopePoints, unitPreference]);
 
     const options = {
         scales: {
@@ -101,7 +109,7 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
                 },
                 grid: {
                     color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                    lineWidth: 0.5,
+                    lineWidth: 0.25,
                 },
                 ticks: {
                     color: isDark ? '#9ca3af' : '#666',
@@ -114,19 +122,21 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
                 type: 'linear' as const,
                 title: {
                     display: true,
-                    text: 'Aircraft Weight (Lbs)',
+                    text: `Aircraft Weight (${isKg ? 'KG' : 'Lbs'})`,
                     color: isDark ? '#9ca3af' : '#666'
                 },
                 ticks: {
                     color: isDark ? '#9ca3af' : '#666',
-                    stepSize: 50,
+                    stepSize: isKg ? 25 : 50,
                 },
                 grid: {
                     color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                    lineWidth: 0.5,
+                    lineWidth: 0.25,
                 },
-                min: 1400,
-                max: 2700,
+                // Adjust min/max for KG if needed, or leave dynamic. 
+                // 1400 lbs ~ 635 kg, 2700 lbs ~ 1225 kg.
+                min: isKg ? 600 : 1400,
+                max: isKg ? 1250 : 2700,
             }
         },
         plugins: {
@@ -142,7 +152,7 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
                 borderColor: isDark ? '#374151' : '#e5e7eb',
                 borderWidth: 1,
                 callbacks: {
-                    label: (ctx: any) => `CG: ${ctx.parsed.x.toFixed(1)}, Wt: ${ctx.parsed.y.toFixed(0)}`
+                    label: (ctx: any) => `CG: ${ctx.parsed.x.toFixed(1)}, Wt: ${ctx.parsed.y.toFixed(0)} ${isKg ? 'kg' : 'lbs'}`
                 }
             }
         },
