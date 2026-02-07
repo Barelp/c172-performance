@@ -35,10 +35,11 @@ interface CGChartProps {
 
 export default function CGChart({ currentWeight, currentCG, isWithinLimits, landingWeight, landingCG, envelopePoints, unitPreference = 'LBS' }: CGChartProps) {
     const { theme } = useTheme();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const isDark = theme === 'dark';
     const isKg = unitPreference === 'KG';
     const weightFactor = isKg ? 1 / 2.20462 : 1;
+    const isRtl = i18n.dir() === 'rtl';
 
     const convertWeight = (lbs: number) => lbs * weightFactor;
 
@@ -97,7 +98,7 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
                 }
             ]
         };
-    }, [currentWeight, currentCG, isWithinLimits, landingWeight, landingCG, isDark, envelopePoints, unitPreference]);
+    }, [currentWeight, currentCG, isWithinLimits, landingWeight, landingCG, isDark, envelopePoints, unitPreference, t]);
 
     const options = {
         scales: {
@@ -143,6 +144,7 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
         },
         plugins: {
             legend: {
+                rtl: isRtl,
                 labels: {
                     color: isDark ? '#e5e7eb' : '#374151'
                 }
