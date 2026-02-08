@@ -1,12 +1,21 @@
 import { useWeightAndBalance, KG_TO_LBS, GAL_TO_LITER } from '../hooks/useWeightAndBalance';
 import CGChart from './CGChart';
 import StationDiagram from './StationDiagram';
-import Tooltip from './Tooltip';
 import { Package, ChevronDown, ChevronUp, HelpCircle, PlaneTakeoff, PlaneLanding, Trash2, Settings, Users } from 'lucide-react';
 import { getAllPresets, getPresetAircraft } from '../data/presets';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { UnitSystem } from '../types';
+
+const Tooltip = ({ text, children }: { text: string; children: React.ReactNode }) => (
+  <div className="group relative inline-block">
+    {children}
+    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-2xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-[9999] text-center font-normal normal-case tracking-normal transform scale-95 group-hover:scale-100 whitespace-normal leading-relaxed">
+      {text}
+      <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-gray-900"></div>
+    </div>
+  </div>
+);
 
 export default function WBCalculator() {
   const { flight, setFlight, aircraft, setAircraft, results } = useWeightAndBalance();
