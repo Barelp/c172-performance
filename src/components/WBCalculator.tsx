@@ -632,16 +632,24 @@ export default function WBCalculator() {
                         <div className="absolute inset-x-0 top-1/2 h-0.5 border-t border-dashed border-white/40 -translate-y-1/2"></div>
 
                         {/* Threshold Runway Numbers & Piano Keys */}
-                        <div className="absolute inset-y-0 left-0 w-10 flex flex-col items-center justify-center border-r border-white/20 bg-emerald-900/10">
-                          <span className="text-white font-black text-xs mb-1 tracking-tighter">35</span>
-                          <div className="flex gap-0.5 h-6">
-                            {[1, 2, 3, 4].map(i => <div key={i} className="w-1 bg-white/90"></div>)}
+                        {/* Threshold Runway Numbers & Piano Keys */}
+                        {/* Threshold Runway Numbers & Piano Keys */}
+                        <div className="absolute inset-y-0 left-0 w-10 flex flex-col items-center justify-between py-1 border-r border-white/20 bg-emerald-900/10">
+                          <div className="flex flex-col gap-1 w-full px-1">
+                            {[1, 2, 3].map(i => <div key={i} className="h-0.5 w-full bg-white/90"></div>)}
+                          </div>
+                          <span className="text-white font-black text-xs tracking-tighter z-10">35</span>
+                          <div className="flex flex-col gap-1 w-full px-1">
+                            {[1, 2, 3].map(i => <div key={i} className="h-0.5 w-full bg-white/90"></div>)}
                           </div>
                         </div>
-                        <div className="absolute inset-y-0 right-0 w-10 flex flex-col items-center justify-center border-l border-white/20 bg-emerald-900/10">
-                          <span className="text-white font-black text-xs mb-1 tracking-tighter">50</span>
-                          <div className="flex gap-0.5 h-6">
-                            {[1, 2, 3, 4].map(i => <div key={i} className="w-1 bg-white/90"></div>)}
+                        <div className="absolute inset-y-0 right-0 w-10 flex flex-col items-center justify-between py-1 border-l border-white/20 bg-emerald-900/10">
+                          <div className="flex flex-col gap-1 w-full px-1">
+                            {[1, 2, 3].map(i => <div key={i} className="h-0.5 w-full bg-white/90"></div>)}
+                          </div>
+                          <span className="text-white font-black text-xs tracking-tighter z-10">50</span>
+                          <div className="flex flex-col gap-1 w-full px-1">
+                            {[1, 2, 3].map(i => <div key={i} className="h-0.5 w-full bg-white/90"></div>)}
                           </div>
                         </div>
 
