@@ -2,7 +2,7 @@ import { useWeightAndBalance, KG_TO_LBS, GAL_TO_LITER } from '../hooks/useWeight
 import CGChart from './CGChart';
 import StationDiagram from './StationDiagramNew';
 import Tooltip from './Tooltip';
-import { Package, ChevronDown, ChevronUp, HelpCircle, PlaneTakeoff, PlaneLanding, Trash2, Settings, Users } from 'lucide-react';
+import { Package, ChevronDown, ChevronUp, HelpCircle, PlaneTakeoff, PlaneLanding, Trash2, Settings, Users, AlertTriangle } from 'lucide-react';
 import { getAllPresets, getPresetAircraft } from '../data/presets';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -106,7 +106,7 @@ export default function WBCalculator() {
 
       {/* Disclaimer Banner */}
       <div className="bg-amber-100 dark:bg-amber-900/30 border-l-4 border-amber-500 text-amber-700 dark:text-amber-400 p-4 mb-6 rounded-r shadow-sm flex items-start gap-3">
-        <HelpCircle className="h-6 w-6 flex-shrink-0" />
+        <AlertTriangle className="h-6 w-6 flex-shrink-0" />
         <p className="font-bold text-sm md:text-base">
           {t('wb.disclaimer')}
         </p>
