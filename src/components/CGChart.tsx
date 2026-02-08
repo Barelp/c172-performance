@@ -103,6 +103,7 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
     }, [currentWeight, currentCG, isWithinLimits, landingWeight, landingCG, isDark, envelopePoints, t, weightFactor]);
 
     const options = {
+        maintainAspectRatio: true,
         scales: {
             x: {
                 type: 'linear' as const,
@@ -167,11 +168,10 @@ export default function CGChart({ currentWeight, currentCG, isWithinLimits, land
             }
         },
         responsive: true,
-        maintainAspectRatio: false,
     };
 
     return (
-        <div className="h-[500px] w-full bg-white dark:bg-gray-800 p-2 rounded-lg relative transition-colors">
+        <div className="w-full aspect-video min-h-[300px] bg-white dark:bg-gray-800 p-2 rounded-lg relative transition-colors">
             <Scatter data={data} options={options} />
         </div>
     );

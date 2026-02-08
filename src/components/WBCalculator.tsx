@@ -10,9 +10,9 @@ import type { UnitSystem } from '../types';
 const Tooltip = ({ text, children }: { text: string; children: React.ReactNode }) => (
   <div className="group relative inline-block">
     {children}
-    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-2xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-[100] text-center font-normal normal-case tracking-normal transform scale-95 group-hover:scale-100 whitespace-normal leading-relaxed">
+    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-2xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-[9999] text-center font-normal normal-case tracking-normal transform scale-95 group-hover:scale-100 whitespace-normal leading-relaxed">
       {text}
-      <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-8 border-transparent border-b-gray-900"></div>
+      <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-gray-900"></div>
     </div>
   </div>
 );
@@ -386,7 +386,7 @@ export default function WBCalculator() {
           </div>
 
           {/* Details Table */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-transparent dark:border-gray-700 transition-colors">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-transparent dark:border-gray-700 transition-colors">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-900/50">
                 <tr>
@@ -426,7 +426,7 @@ export default function WBCalculator() {
       </div>
 
       {/* Calculation Details Toggle - Outside the grid for full width */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-transparent dark:border-gray-700 transition-colors">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-transparent dark:border-gray-700 transition-colors">
         <button
           onClick={() => setShowDetails(!showDetails)}
           className="w-full px-6 py-4 flex items-center justify-between text-start focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"

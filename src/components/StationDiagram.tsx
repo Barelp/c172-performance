@@ -39,21 +39,21 @@ export default function StationDiagram({
     };
 
     return (
-        <div className="w-full relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden transition-colors duration-300" style={{ aspectRatio: '4/3' }}>
+        <div className="w-full relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden transition-colors duration-300">
             {/* Real Aircraft Image Background */}
-            <div className="absolute inset-0 flex items-center justify-center p-4">
+            <div className="w-full">
                 <img
                     src={aircraftTopView}
                     alt="Cessna 172 Top View"
-                    className={`w-full h-full object-contain transition-all duration-500 ${isDark ? 'opacity-40 brightness-75 invert' : 'opacity-80'}`}
+                    className={`w-full h-auto object-contain transition-all duration-500 ${isDark ? 'opacity-40 brightness-75 invert' : 'opacity-80'}`}
                 />
             </div>
 
-            {/* Weight Boxes Overlay - Absolute Positioned */}
-            <div className="absolute inset-0">
+            {/* Weight Boxes Overlay - Absolute Positioned relative to image container */}
+            <div className="absolute inset-0 pointer-events-none">
 
                 {/* Fuel Left */}
-                <div className="absolute top-[25%] left-[20%]">
+                <div className="absolute top-[28%] left-[18%]">
                     <div className="bg-emerald-100/30 dark:bg-emerald-900/30 backdrop-blur-sm border border-emerald-600/50 dark:border-emerald-500/50 rounded px-1.5 py-0.5 shadow-sm text-center min-w-[50px] transition-colors">
                         <span className="block text-[7px] text-emerald-800 dark:text-emerald-300 font-bold leading-none mb-0.5">{t('diagram.fuelL')}</span>
                         <span className="text-[10px] font-bold text-emerald-950 dark:text-emerald-100">{formatWeight(fuelLeftWeight)} <span className="text-[8px] opacity-70">{unitLabel}</span></span>
@@ -61,23 +61,23 @@ export default function StationDiagram({
                 </div>
 
                 {/* Total Fuel */}
-                <div className="absolute top-[35%] left-[50%] -translate-x-1/2">
-                    <div className="bg-blue-100/30 dark:bg-blue-900/40 backdrop-blur-sm border border-blue-600/50 dark:border-blue-500/50 rounded px-2 py-0.5 shadow-sm text-center min-w-[70px] transition-colors">
+                <div className="absolute top-[40%] left-[50%] -translate-x-1/2">
+                    <div className="bg-blue-100/40 dark:bg-blue-900/50 backdrop-blur-md border border-blue-600/50 dark:border-blue-500/50 rounded px-2 py-0.5 shadow-sm text-center min-w-[70px] transition-colors">
                         <span className="block text-[7px] text-blue-800 dark:text-blue-300 font-bold uppercase leading-none mb-0.5">{t('diagram.totalFuel')}</span>
                         <span className="text-xs font-black text-blue-950 dark:text-blue-100">{formatWeight(fuelLeftWeight + fuelRightWeight)} <span className="text-[9px] opacity-70">{unitLabel}</span></span>
                     </div>
                 </div>
 
                 {/* Fuel Right */}
-                <div className="absolute top-[25%] right-[20%]">
-                    <div className="bg-emerald-100/30 dark:bg-emerald-900/30 backdrop-blur-sm border border-emerald-600/50 dark:border-emerald-500/50 rounded px-1.5 py-0.5 shadow-sm text-center min-w-[50px] transition-colors">
+                <div className="absolute top-[28%] right-[18%]">
+                    <div className="bg-emerald-100/40 dark:bg-emerald-900/40 backdrop-blur-md border border-emerald-600/50 dark:border-emerald-500/50 rounded px-1.5 py-0.5 shadow-sm text-center min-w-[50px] transition-colors">
                         <span className="block text-[7px] text-emerald-800 dark:text-emerald-300 font-bold leading-none mb-0.5">{t('diagram.fuelR')}</span>
                         <span className="text-[10px] font-bold text-emerald-950 dark:text-emerald-100">{formatWeight(fuelRightWeight)} <span className="text-[8px] opacity-70">{unitLabel}</span></span>
                     </div>
                 </div>
 
                 {/* Front Passengers */}
-                <div className="absolute top-[17%] left-[50%] -translate-x-1/2">
+                <div className="absolute top-[15%] left-[50%] -translate-x-1/2">
                     <div className="bg-sky-100/30 dark:bg-sky-900/40 backdrop-blur-sm border border-sky-600/50 dark:border-sky-500/50 rounded px-2 py-0.5 shadow-md text-center min-w-[85px] transition-colors">
                         <span className="block text-[7px] text-sky-800 dark:text-sky-300 font-bold uppercase leading-none mb-0.5">{t('diagram.frontSeats')}</span>
                         <span className="text-xs font-black text-sky-950 dark:text-sky-100">{formatWeight(pilotWeight + frontPaxWeight)} <span className="text-[9px] opacity-70">{unitLabel}</span></span>
@@ -89,8 +89,8 @@ export default function StationDiagram({
                 </div>
 
                 {/* Rear Passengers */}
-                <div className="absolute top-[48%] left-[50%] -translate-x-1/2">
-                    <div className="bg-purple-100/30 dark:bg-purple-900/40 backdrop-blur-sm border border-purple-600/50 dark:border-purple-500/50 rounded px-2 py-0.5 shadow-md text-center min-w-[85px] transform hover:scale-105 transition cursor-default">
+                <div className="absolute top-[52%] left-[50%] -translate-x-1/2">
+                    <div className="bg-purple-100/40 dark:bg-purple-900/50 backdrop-blur-md border border-purple-600/50 dark:border-purple-500/50 rounded px-2 py-0.5 shadow-md text-center min-w-[85px] transform transition cursor-default">
                         <span className="block text-[7px] text-purple-800 dark:text-purple-300 font-bold uppercase leading-none mb-0.5">{t('diagram.rearSeats')}</span>
                         <span className="text-xs font-black text-purple-950 dark:text-purple-100">{formatWeight(rearPax1Weight + rearPax2Weight)} <span className="text-[9px] opacity-70">{unitLabel}</span></span>
                         <div className="flex justify-between mt-0.5 pt-0.5 border-t border-purple-200/50 dark:border-purple-700/50 gap-3">
@@ -101,16 +101,16 @@ export default function StationDiagram({
                 </div>
 
                 {/* Baggage 1 */}
-                <div className="absolute top-[62%] left-[50%] -translate-x-1/2">
-                    <div className="bg-pink-100/30 dark:bg-pink-900/40 backdrop-blur-sm border border-pink-500/50 rounded px-2.5 py-0.5 shadow-sm text-center min-w-[80px] transition-colors">
+                <div className="absolute top-[65%] left-[50%] -translate-x-1/2">
+                    <div className="bg-pink-100/40 dark:bg-pink-900/50 backdrop-blur-md border border-pink-500/50 rounded px-2.5 py-0.5 shadow-sm text-center min-w-[80px] transition-colors">
                         <span className="block text-[7px] text-pink-800 dark:text-pink-300 font-bold leading-none mb-0.5">{t('diagram.baggage1')}</span>
                         <span className="text-xs font-bold text-pink-950 dark:text-pink-100">{formatWeight(baggage1Weight)} <span className="text-[9px] opacity-70">{unitLabel}</span></span>
                     </div>
                 </div>
 
                 {/* Baggage 2 */}
-                <div className="absolute top-[72%] left-[50%] -translate-x-1/2">
-                    <div className="bg-yellow-100/30 dark:bg-yellow-900/40 backdrop-blur-sm border border-yellow-500/50 rounded px-2.5 py-0.5 shadow-sm text-center min-w-[80px] transition-colors">
+                <div className="absolute top-[75%] left-[50%] -translate-x-1/2">
+                    <div className="bg-yellow-100/40 dark:bg-yellow-900/50 backdrop-blur-md border border-yellow-500/50 rounded px-2.5 py-0.5 shadow-sm text-center min-w-[80px] transition-colors">
                         <span className="block text-[7px] text-yellow-800 dark:text-yellow-300 font-bold leading-none mb-0.5">{t('diagram.baggage2')}</span>
                         <span className="text-xs font-bold text-yellow-950 dark:text-yellow-100">{formatWeight(baggage2Weight)} <span className="text-[9px] opacity-70">{unitLabel}</span></span>
                     </div>
