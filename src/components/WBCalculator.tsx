@@ -738,7 +738,7 @@ export default function WBCalculator() {
               {/* Right Column: Weight Distribution Diagram */}
               <div className="lg:sticky lg:top-4 h-fit flex flex-col">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center justify-between transition-colors">
-                  <span>{t('wb.weightDistribution')} (v2)</span>
+                  <span>{t('wb.weightDistribution')}</span>
                   <div className="flex gap-2">
                     <div className="flex items-center gap-1">
                       <div className="w-2 h-2 rounded-full bg-indigo-400"></div>
