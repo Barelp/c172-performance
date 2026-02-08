@@ -57,7 +57,7 @@
         "arm": "Arm",
         "loading": "Loading",
         "loadingTooltip": "Enter the weight for each station. Arm is the distance from the datum. Weight x Arm = Moment.",
-        "standardFlight": "Standard Flight",
+        "standardFlight": "Typical Flight",
         "clearAll": "Clear All",
         "unit": "Unit",
         "pilot": "Pilot",
