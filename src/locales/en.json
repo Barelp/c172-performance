@@ -3,7 +3,8 @@
     "appSubtitle": "Weight & Balance Calculator",
     "nav": {
         "wb": "Weight & Balance",
-        "config": "Configuration"
+        "config": "Configuration",
+        "navPlanner": "Nav Planner"
     },
     "config": {
         "title": "Aircraft Configuration",
@@ -124,5 +125,62 @@
         "pax": "Ax",
         "p1": "P1",
         "p2": "P2"
+    },
+    "navPlanner": {
+        "title": "Navigation & Fuel Planning",
+        "warning": "This calculator is not a substitute for the POH. Always verify your calculations!",
+        "generalDetails": "General Details:",
+        "takeoffTime": "Takeoff Time",
+        "cruiseGS": "Cruise Speed (G/S)",
+        "cruiseGPH": "Cruise Fuel (GPH)",
+        "taxiFuel": "Startup & Taxi Fuel (Gal)",
+        "routeDetails": "Flight Route",
+        "origin": "Origin",
+        "landing1": "Landing 1",
+        "landing2": "Landing 2",
+        "finalDest": "Final Dest",
+        "alternate": "Alternate Airport",
+        "altName": "Name",
+        "altFreq": "Freq",
+        "flightStatus": "Flight Plan",
+        "callsign": "Callsign:",
+        "aircraftType": "Aircraft Type:",
+        "flightEndurance": "Fuel Endurance:",
+        "departureDest": "Dep/Dest:",
+        "paxCount": "POB:",
+        "registration": "Registration:",
+        "legsTable": {
+            "to": "To",
+            "from": "From",
+            "dist": "Dist NM",
+            "time": "Flight Time",
+            "timeOverPoint": "Time Over Point",
+            "fuelGal": "Fuel GAL",
+            "heading": "Heading",
+            "altitude": "Altitude",
+            "trend": "Trend",
+            "control": "Control",
+            "primaryFreq": "Primary Freq",
+            "secondaryFreq": "Secondary Freq",
+            "vorName": "VOR Name",
+            "vorRadial": "VOR Radial",
+            "vorDist": "VOR Dist"
+        },
+        "addLeg": "Add Leg",
+        "removeLeg": "Remove Leg",
+        "summary": {
+            "title": "Final Flight Data",
+            "totalDist": "Total Flight Distance (NM)",
+            "totalTime": "Total Flight Time",
+            "reqFuelNoReserve": "Required Fuel (No Reserve)",
+            "reqFuel45Min": "Required Fuel (45m Reserve)",
+            "reqFuel60Min": "Required Fuel (1h Reserve)",
+            "reserve45": "45 min Reserve (Gal)"
+        },
+        "trendOptions": {
+            "climb": "Climb",
+            "descent": "Descent",
+            "noChange": "No Change"
+        }
     }
 }

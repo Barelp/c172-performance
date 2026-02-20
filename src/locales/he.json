@@ -3,7 +3,8 @@
     "appSubtitle": "מחשבון משקל ואיזון",
     "nav": {
         "wb": "משקל ואיזון",
-        "config": "הגדרות"
+        "config": "הגדרות",
+        "navPlanner": "תכנון ניווט"
     },
     "config": {
         "title": "הגדרות מטוס",
@@ -124,5 +125,62 @@
         "pax": "נוסע",
         "p1": "נו' 1",
         "p2": "נו' 2"
+    },
+    "navPlanner": {
+        "title": "תכנון ניווט ודלק",
+        "warning": "מחשבון זה אינו מהווה תחליף לספר המטוס (POH). יש לוודא תמיד את החישובים!",
+        "generalDetails": "הזנת נתונים:",
+        "takeoffTime": "שעת המראה",
+        "cruiseGS": "מהירות שיוט (G/S)",
+        "cruiseGPH": "צריכת דלק בשיוט (GPH)",
+        "taxiFuel": "צריכת דלק בהנעה, הסעה והמראה (גאלון)",
+        "routeDetails": "נתיב טיסה",
+        "origin": "מוצא",
+        "landing1": "נחיתה 1",
+        "landing2": "נחיתה 2",
+        "finalDest": "יעד סופי",
+        "alternate": "שדה נחיתה חלופי",
+        "altName": "שם",
+        "altFreq": "תדר",
+        "flightStatus": "מרשה טיסה",
+        "callsign": "אות קריאה:",
+        "aircraftType": "סוג המטוס:",
+        "flightEndurance": "דלק בשעות:",
+        "departureDest": "מוצא ויעד:",
+        "paxCount": "טייס+נוסעים:",
+        "registration": "מספר רישוי:",
+        "legsTable": {
+            "to": "אל-",
+            "from": "מ-",
+            "dist": "מרחק NM",
+            "time": "זמן טיסה",
+            "timeOverPoint": "זמן מעל נק'",
+            "fuelGal": "דלק GAL",
+            "heading": "כיוון",
+            "altitude": "גובה",
+            "trend": "מגמה",
+            "control": "בקרה",
+            "primaryFreq": "תדר ראשי",
+            "secondaryFreq": "תדר משני",
+            "vorName": "שם VOR",
+            "vorRadial": "תדר\\רדיאל VOR",
+            "vorDist": "מרחק מVOR"
+        },
+        "addLeg": "הוסף לג",
+        "removeLeg": "הסר לג",
+        "summary": {
+            "title": "נתונים סופיים לטיסה",
+            "totalDist": "מרחק טיסה כולל (מייל ימי)",
+            "totalTime": "זמן טיסה כולל",
+            "reqFuelNoReserve": "כמות דלק נדרשת ללא רזרבה (גלון)",
+            "reqFuel45Min": "כמות דלק נדרשת עם רזרבה 45 דק' (גלון)",
+            "reqFuel60Min": "כמות דלק נדרשת עם רזרבה לשעה (גלון)",
+            "reserve45": "רזרבה 45 דקות (גלון)"
+        },
+        "trendOptions": {
+            "climb": "טיפוס",
+            "descent": "הנמכה",
+            "noChange": "ללא שינוי"
+        }
     }
 }

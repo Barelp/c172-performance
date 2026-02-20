@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Plane, Settings, Gauge, Sun, Moon } from 'lucide-react';
+import { Plane, Settings, Gauge, Sun, Moon, Map } from 'lucide-react';
 import cessnaBanner from '../resources/cessna_wallpaper.jpg';
 import { useTheme } from '../context/ThemeContext';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -26,7 +26,10 @@ export default function Layout() {
                             <Plane className="h-8 w-8" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-md">{t('appTitle')}</h1>
+                            <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-md flex items-baseline gap-3">
+                                <span>{t('appTitle')}</span>
+                                <BuildVersion className="hidden sm:block mt-1" />
+                            </h1>
                             <p className="text-xs text-blue-100 font-medium tracking-wide">{t('appSubtitle')}</p>
                         </div>
                     </div>
@@ -36,6 +39,9 @@ export default function Layout() {
                         <nav className="hidden md:flex gap-2">
                             <Link to="/calculator" className={`px-4 py-2 rounded-md text-sm font-semibold backdrop-blur-md border border-white/30 flex items-center gap-2 transition-all ${location.pathname === '/calculator' ? 'bg-white text-aviation-blue shadow-lg' : 'bg-white/20 text-white hover:bg-white/30'}`}>
                                 <Gauge className="h-4 w-4" /> {t('nav.wb')}
+                            </Link>
+                            <Link to="/navigation" className={`px-4 py-2 rounded-md text-sm font-semibold backdrop-blur-md border border-white/30 flex items-center gap-2 transition-all ${location.pathname === '/navigation' ? 'bg-white text-aviation-blue shadow-lg' : 'bg-white/20 text-white hover:bg-white/30'}`}>
+                                <Map className="h-4 w-4" /> {t('nav.navPlanner')}
                             </Link>
                             <Link to="/config" className={`px-4 py-2 rounded-md text-sm font-semibold backdrop-blur-md border border-white/30 flex items-center gap-2 transition-all ${location.pathname === '/config' ? 'bg-white text-aviation-blue shadow-lg' : 'bg-white/20 text-white hover:bg-white/30'}`}>
                                 <Settings className="h-4 w-4" /> {t('nav.config')}
@@ -72,14 +78,15 @@ export default function Layout() {
                     <Gauge className="h-5 w-5" />
                     <span className="text-[10px] mt-1 uppercase font-bold tracking-tighter text-gray-400">{t('nav.wb')}</span>
                 </Link>
+                <Link to="/navigation" className={`flex-1 flex flex-col items-center justify-center py-3 ${location.pathname === '/navigation' ? 'text-aviation-blue dark:text-blue-400 font-bold' : 'text-gray-500'}`}>
+                    <Map className="h-5 w-5" />
+                    <span className="text-[10px] mt-1 uppercase font-bold tracking-tighter text-gray-400">{t('nav.navPlanner')}</span>
+                </Link>
                 <Link to="/config" className={`flex-1 flex flex-col items-center justify-center py-3 ${location.pathname === '/config' ? 'text-aviation-blue dark:text-blue-400 font-bold' : 'text-gray-500'}`}>
                     <Settings className="h-5 w-5" />
                     <span className="text-[10px] mt-1 uppercase font-bold tracking-tighter text-gray-400">{t('nav.config')}</span>
                 </Link>
             </nav>
-
-            {/* Build Version Display */}
-            <BuildVersion />
         </div>
     );
 }

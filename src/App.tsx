@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import WBCalculator from './components/WBCalculator';
 import Config from './pages/Config';
+import NavigationPlanner from './pages/NavigationPlanner';
 import { ThemeContext } from './context/ThemeContext';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Navigate to="/calculator" replace />} />
             <Route path="calculator" element={<WBCalculator />} />
+            <Route path="navigation" element={<NavigationPlanner />} />
             <Route path="config" element={<Config />} />
             <Route path="checklist" element={<div className="p-4 bg-white dark:bg-gray-800 rounded shadow transition-colors">Checklist Logic Here</div>} />
             <Route path="*" element={<Navigate to="/calculator" replace />} />
