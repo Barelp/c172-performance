@@ -366,33 +366,7 @@ export default function NavigationPlanner() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.takeoffTime')}</label>
-                                <div className="flex bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-aviation-blue">
-                                    <input
-                                        type="number"
-                                        min="0" max="23"
-                                        placeholder="HH"
-                                        value={details.takeoffTime.split(':')[0]}
-                                        onChange={e => {
-                                            const val = e.target.value.padStart(2, '0').slice(-2);
-                                            handleDetailChange('takeoffTime', `${val}:${details.takeoffTime.split(':')[1] || '00'}`);
-                                        }}
-                                        className="w-full p-2 bg-transparent text-center focus:outline-none appearance-none m-0"
-                                        style={{ MozAppearance: 'textfield' }}
-                                    />
-                                    <span className="flex items-center text-gray-500 font-bold">:</span>
-                                    <input
-                                        type="number"
-                                        min="0" max="59"
-                                        placeholder="MM"
-                                        value={details.takeoffTime.split(':')[1] || '00'}
-                                        onChange={e => {
-                                            const val = e.target.value.padStart(2, '0').slice(-2);
-                                            handleDetailChange('takeoffTime', `${details.takeoffTime.split(':')[0] || '00'}:${val}`);
-                                        }}
-                                        className="w-full p-2 bg-transparent text-center focus:outline-none appearance-none m-0"
-                                        style={{ MozAppearance: 'textfield' }}
-                                    />
-                                </div>
+                                <input type="time" value={details.takeoffTime} onChange={e => handleDetailChange('takeoffTime', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.cruiseGS')}</label>
