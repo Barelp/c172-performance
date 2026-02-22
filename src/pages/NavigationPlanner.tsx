@@ -112,10 +112,15 @@ export default function NavigationPlanner() {
                 const wpTo = getWaypoint(updatedLeg.to);
                 if (wpFrom && wpTo && wpFrom.lat && wpFrom.lon && wpTo.lat && wpTo.lon) {
                     const midLat = (wpFrom.lat + wpTo.lat) / 2;
-                    const dx = (wpTo.lon - wpFrom.lon) * 60 * Math.cos(midLat * Math.PI / 180);
-                    const dy = (wpTo.lat - wpFrom.lat) * 60;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    updatedLeg.distNM = parseFloat(dist.toFixed(1));
+                    const dx = (wpTo.lon - wpFrom.lon) * Math.cos(midLat * Math.PI / 180);
+                    const dy = wpTo.lat - wpFrom.lat;
+                    const distNM = Math.sqrt(dx * dx + dy * dy) * 60;
+                    updatedLeg.distNM = parseFloat(distNM.toFixed(1));
+
+                    let tc = Math.atan2(dx, dy) * 180 / Math.PI;
+                    if (tc < 0) tc += 360;
+
+                    updatedLeg.heading = Math.round(tc).toString().padStart(3, '0');
                 }
             }
             return updatedLeg;
