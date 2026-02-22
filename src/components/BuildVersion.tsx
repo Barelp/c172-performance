@@ -8,7 +8,7 @@ interface BuildVersionProps {
 export default function BuildVersion({ className = '' }: BuildVersionProps) {
     const [showTooltip, setShowTooltip] = useState(false);
 
-    const version = '1.0.0';
+    const version = import.meta.env.VITE_APP_VERSION || '1.0.0';
     const displayVersion = `v${version}-${buildInfo.shortHash}`;
 
     return (
