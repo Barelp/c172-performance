@@ -137,6 +137,7 @@
         "temperature": "טמפרטורה (°C)",
         "cruiseGPH": "צריכת דלק בשיוט (GPH)",
         "taxiFuel": "דלק הסעה (Gal)",
+        "tocFuel": "דלק לטיפוס (Gal)",
         "routeDetails": "נתיב טיסה",
         "origin": "מוצא",
         "landing1": "נחיתת ביניים 1",

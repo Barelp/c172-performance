@@ -137,6 +137,7 @@
         "temperature": "Temperature (°C)",
         "cruiseGPH": "Cruise Fuel (GPH)",
         "taxiFuel": "Startup & Taxi Fuel (Gal)",
+        "tocFuel": "Fuel to TOC (Gal)",
         "routeDetails": "Flight Route",
         "origin": "Origin",
         "landing1": "Landing 1",

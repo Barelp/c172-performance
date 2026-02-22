@@ -16,6 +16,7 @@ const initialDetails: FlightDetails = {
     cruiseGS: 90,
     cruiseGPH: 8,
     taxiFuel: 1.1,
+    tocFuel: 1,
     origin: '',
     landing1: '',
     landing2: '',
@@ -157,6 +158,7 @@ export default function NavigationPlanner() {
     const cruiseIAS = parseNum(details.cruiseGS);
     const gph = parseNum(details.cruiseGPH);
     const taxiFuel = parseNum(details.taxiFuel);
+    const tocFuel = parseNum(details.tocFuel);
 
     let cumulativeHours = 0;
 
@@ -230,9 +232,9 @@ export default function NavigationPlanner() {
 
     const totalDist = calculatedLegs.reduce((acc, leg) => acc + parseNum(leg.distNM), 0);
     const totalTimeHours = calculatedLegs.reduce((acc, leg) => acc + leg.flightTimeHours, 0);
-    const totalFuelUsed = calculatedLegs.reduce((acc, leg) => acc + leg.fuelUsed, 0);
+    const totalFuelUsed = calculatedLegs.reduce((acc, leg) => acc + leg.fuelUsed, 0) + taxiFuel + tocFuel;
 
-    const reqFuelNoReserve = totalFuelUsed + taxiFuel;
+    const reqFuelNoReserve = totalFuelUsed;
     const reserve45 = 0.75 * gph;
     const reqFuel45Min = reqFuelNoReserve + reserve45;
     const reqFuel60Min = reqFuelNoReserve + gph;
@@ -450,6 +452,10 @@ export default function NavigationPlanner() {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.taxiFuel')}</label>
                                 <input type="number" step="0.1" value={details.taxiFuel} onChange={e => handleDetailChange('taxiFuel', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.tocFuel')}</label>
+                                <input type="number" step="0.1" value={details.tocFuel} onChange={e => handleDetailChange('tocFuel', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
                             </div>
                         </div>
                     </div>

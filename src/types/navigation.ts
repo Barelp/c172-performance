@@ -23,6 +23,7 @@ export interface FlightDetails {
     cruiseGS: number | '';
     cruiseGPH: number | '';
     taxiFuel: number | '';
+    tocFuel: number | '';
     origin: string;
     landing1: string;
     landing2: string;
