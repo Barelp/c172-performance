@@ -57,15 +57,6 @@ export default function NavigationPlanner() {
         return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
-    // Add hours to time string (HH:mm)
-    const addTimeToTakeoff = (baseTime: string, hoursToAdd: number) => {
-        if (!baseTime) return '';
-        const [hStr, mStr] = baseTime.split(':');
-        let totalHours = (parseInt(hStr || '0', 10)) + (parseInt(mStr || '0', 10) / 60) + hoursToAdd;
-        totalHours = totalHours % 24; // Handle day wrap
-        return formatDuration(totalHours);
-    };
-
     const handleDetailChange = (field: keyof FlightDetails, value: string | number) => {
         let parsedValue = value;
         if (typeof value === 'string') {
@@ -215,7 +206,7 @@ export default function NavigationPlanner() {
         const fuelUsed = flightTimeHours * gph;
 
         cumulativeHours += flightTimeHours;
-        const timeOverPoint = addTimeToTakeoff(details.takeoffTime, cumulativeHours);
+        const timeOverPoint = formatDuration(cumulativeHours);
 
         return {
             ...leg,
@@ -553,8 +544,8 @@ export default function NavigationPlanner() {
                         <tbody>
                             {calculatedLegs.map((leg, index) => (
                                 <tr key={leg.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                                    <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.from} onChange={e => handleLegChange(leg.id, 'from', e.target.value)} className="w-32 sm:w-40 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
-                                    <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.to} onChange={e => handleLegChange(leg.id, 'to', e.target.value)} className="w-32 sm:w-40 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
+                                    <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.from} onChange={e => handleLegChange(leg.id, 'from', e.target.value)} className="w-28 sm:w-36 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
+                                    <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.to} onChange={e => handleLegChange(leg.id, 'to', e.target.value)} className="w-28 sm:w-36 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
                                     <td className="px-2 py-1"><input type="number" value={leg.distNM} onChange={e => handleLegChange(leg.id, 'distNM', e.target.value)} className="w-12 sm:w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
                                     <td className="px-2 py-1 font-mono text-center text-gray-600 dark:text-gray-400">{leg.flightTimeStr}</td>
                                     <td className="px-2 py-1 font-mono text-center text-gray-600 dark:text-gray-400">{leg.timeOverPoint}</td>

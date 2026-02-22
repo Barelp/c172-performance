@@ -192,7 +192,7 @@
             "from": "From",
             "dist": "Dist NM",
             "time": "Flight Time",
-            "timeOverPoint": "Time Over Point",
+            "timeOverPoint": "Cumm Time",
             "fuelGal": "Fuel GAL",
             "heading": "Heading (°)",
             "altitude": "Altitude",
