@@ -128,6 +128,13 @@
     },
     "navPlanner": {
         "title": "עזר לתכנון ניווט ודלק",
+        "map": {
+            "title": "מפת נתיבי תובלה נמוכים",
+            "showRoute": "הצג נתיב",
+            "hideRoute": "הסתר נתיב",
+            "imageNotFound": "תמונת מפה לא נמצאה",
+            "imageErrorDesc": "אנא ודא שהמפה שמורה כ-flight-map.jpg תחת תיקיית public של הפרוייקט."
+        },
         "warning": "מחשבון זה אינו מהווה תחליף לספר המטוס (POH). יש לוודא תמיד את החישובים!",
         "generalDetails": "נתונים כלליים",
         "flightDate": "תאריך טיסה",

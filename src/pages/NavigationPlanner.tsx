@@ -4,6 +4,7 @@ import { Map, Plus, Trash2, Calculator, PlusCircle, Send } from 'lucide-react';
 import type { FlightDetails, FlightLeg } from '../types/navigation';
 import { waypoints } from '../data/waypoints';
 import { getAllPresets } from '../data/presets';
+import FlightMap from '../components/FlightMap';
 
 const getTodayDate = () => {
     const today = new Date();
@@ -669,6 +670,11 @@ export default function NavigationPlanner() {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            {/* Map Section */}
+            <div className="mt-8">
+                <FlightMap legs={calculatedLegs} origin={details.origin} finalDest={details.finalDest} />
             </div>
 
             {/* Flight Status (Moved to Bottom) */}

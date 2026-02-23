@@ -18,7 +18,7 @@ export const waypoints: Waypoint[] = [
     { code: 'KTORA', name: 'צומת קטורה', lat: 29.989444, lon: 35.076389 },
     { code: 'SOKET', name: 'צומת שוקת', lat: 31.307500, lon: 34.901111 },
     { code: 'ZOFAR', name: 'צופר', lat: 30.559722, lon: 35.186667 },
-    { code: 'TZHOT', name: 'צלמון', lat: 31.307778, lon: 34.529722 },
+    { code: 'TZHOT', name: 'צפחות', lat: 31.307778, lon: 34.529722 },
     { code: 'ZALMN', name: 'צלמון', lat: 32.853333, lon: 35.411667 },
     { code: 'NCITY', name: 'צפון העיר', lat: 31.287500, lon: 34.791389 },
     { code: 'KNTRY', name: 'קאנטרי קלאב', lat: 31.140833, lon: 34.801389 },
