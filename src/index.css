@@ -16,11 +16,21 @@
   :root {
     color-scheme: light;
   }
-  
+
   :root.dark {
     color-scheme: dark;
   }
+
   body {
     @apply bg-aviation-gray text-aviation-black antialiased;
   }
+}
+
+/* Custom overlay classes for maps */
+.north-map-overlay {
+  clip-path: polygon(0 0, 100% 0, 100% 86.5%, 0 86.5%);
+}
+
+.south-map-overlay {
+  clip-path: polygon(0 0.5%, 100% 0.5%, 100% 100%, 0 100%);
 }

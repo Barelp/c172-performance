@@ -45,13 +45,24 @@ interface FlightMapProps {
     finalDest?: string;
 }
 
-// Bounding box of the provided map image
-// TL: [Lon: 34.080108, Lat: 33.435393]
-// BR: [Lon: 35.941661, Lat: 31.187427]
-// Leaflet uses [Lat, Lon]
-const mapBounds: L.LatLngBoundsExpression = [
+// Bounding box of the provided map image (North)
+const northMapBounds: L.LatLngBoundsExpression = [
     [31.187427, 34.080108], // SouthWest / BR (Lat, Lon)
     [33.435393, 35.941661]  // NorthEast / TL (Lat, Lon)
+];
+
+// Bounding box of the provided map image (South)
+// TL: [34.035409, 31.604457]
+// BR: [35.874925, 29.342049]
+const southMapBounds: L.LatLngBoundsExpression = [
+    [29.342049, 34.035409], // SouthWest / BR (Lat, Lon)
+    [31.604457, 35.874925]  // NorthEast / TL (Lat, Lon)
+];
+
+// Combined bounds to initially fit both
+const fullMapBounds: L.LatLngBoundsExpression = [
+    [29.342049, 34.035409], // Min Lat, Min Lon (SW)
+    [33.435393, 35.941661]  // Max Lat, Max Lon (NE)
 ];
 
 function MapController({ routeCoords }: { routeCoords: [number, number][] }) {
@@ -63,7 +74,7 @@ function MapController({ routeCoords }: { routeCoords: [number, number][] }) {
                 map.flyToBounds(bounds, { padding: [50, 50], maxZoom: 11, duration: 1 });
             }
         } else {
-            map.flyToBounds(mapBounds as L.LatLngBoundsExpression, { duration: 1 });
+            map.flyToBounds(fullMapBounds as L.LatLngBoundsExpression, { duration: 1 });
         }
     }, [map, routeCoords]);
     return null;
@@ -71,7 +82,8 @@ function MapController({ routeCoords }: { routeCoords: [number, number][] }) {
 
 export default function FlightMap({ legs, origin, finalDest }: FlightMapProps) {
     const { t } = useTranslation();
-    const [imageError, setImageError] = useState(false);
+    const [imageErrorNorth, setImageErrorNorth] = useState(false);
+    const [imageErrorSouth, setImageErrorSouth] = useState(false);
     const [showRoute, setShowRoute] = useState(true);
     const [isTracking, setIsTracking] = useState(false);
     const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
@@ -217,30 +229,43 @@ export default function FlightMap({ legs, origin, finalDest }: FlightMapProps) {
                 </div>
             </div>
             <div className="relative w-full h-[600px] sm:h-[700px] md:h-[800px] z-0 bg-gray-100 dark:bg-gray-900">
-                {imageError && (
-                    <div className="absolute inset-0 bg-red-50/90 dark:bg-red-900/90 z-[1000] flex flex-col items-center justify-center p-6 text-center">
-                        <p className="text-red-600 dark:text-red-400 font-bold text-xl mb-3">{t('navPlanner.map.imageNotFound')}</p>
-                        <p className="text-sm text-red-700 dark:text-red-300 max-w-md">
-                            {t('navPlanner.map.imageErrorDesc')}
+                {(imageErrorNorth || imageErrorSouth) && (
+                    <div className="absolute inset-x-0 top-0 bg-red-50/90 dark:bg-red-900/90 z-[1000] flex flex-col items-center justify-center p-2 text-center border-b border-red-200 dark:border-red-800">
+                        <p className="text-red-600 dark:text-red-400 font-bold text-sm">
+                            {t('navPlanner.map.imageNotFound', 'One or more map images not found')}
                         </p>
                     </div>
                 )}
 
                 <MapContainer
-                    bounds={mapBounds}
+                    bounds={fullMapBounds}
                     scrollWheelZoom={true}
                     className="w-full h-full"
                     style={{ zIndex: 1 }}
                 >
-                    {/* The fallback image bounds is standard Israel bounding roughly if needed, 
-                        but we stick to what the user provided */}
+                    {/* Northern Map */}
                     <ImageOverlay
                         url="/flight-map.jpg"
-                        bounds={mapBounds}
+                        bounds={northMapBounds}
+                        zIndex={10}
+                        className="north-map-overlay"
                         errorOverlayUrl=""
                         eventHandlers={{
-                            error: () => setImageError(true),
-                            load: () => setImageError(false)
+                            error: () => setImageErrorNorth(true),
+                            load: () => setImageErrorNorth(false)
+                        }}
+                    />
+
+                    {/* Southern Map */}
+                    <ImageOverlay
+                        url="/aip_CVFR_South_2023_page-0001.jpg"
+                        bounds={southMapBounds}
+                        zIndex={1}
+                        className="south-map-overlay"
+                        errorOverlayUrl=""
+                        eventHandlers={{
+                            error: () => setImageErrorSouth(true),
+                            load: () => setImageErrorSouth(false)
                         }}
                     />
 
