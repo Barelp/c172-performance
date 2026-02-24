@@ -42,7 +42,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 subject: msg.subject
             }
         });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('SendGrid Execution Error:', error);
 
         // Detailed error extraction from the SendGrid SDK structure if present

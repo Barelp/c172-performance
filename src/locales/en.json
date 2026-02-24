@@ -140,7 +140,9 @@
             "stopTracking": "Stop Tracking",
             "myLocation": "My Location",
             "imageNotFound": "Map Image Not Found",
-            "imageErrorDesc": "Please ensure the map is saved as flight-map.jpg in the public folder of the project."
+            "imageErrorDesc": "Please ensure the map is saved as flight-map.jpg in the public folder of the project.",
+            "showNotams": "Show NOTAMs",
+            "hideNotams": "Hide NOTAMs"
         },
         "warning": "This calculator is not a substitute for the POH. Always verify your calculations!",
         "generalDetails": "General Details",

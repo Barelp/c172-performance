@@ -140,7 +140,9 @@
             "stopTracking": "הפסק מעקב",
             "myLocation": "המיקום שלי",
             "imageNotFound": "תמונת מפה לא נמצאה",
-            "imageErrorDesc": "אנא ודא שהמפה שמורה כ-flight-map.jpg תחת תיקיית public של הפרוייקט."
+            "imageErrorDesc": "אנא ודא שהמפה שמורה כ-flight-map.jpg תחת תיקיית public של הפרוייקט.",
+            "showNotams": "הצג NOTAMs",
+            "hideNotams": "הסתר NOTAMs"
         },
         "warning": "מחשבון זה אינו מהווה תחליף לספר המטוס (POH). יש לוודא תמיד את החישובים!",
         "generalDetails": "נתונים כלליים",

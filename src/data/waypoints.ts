@@ -7,7 +7,7 @@ export interface Waypoint {
 
 export const waypoints: Waypoint[] = [
     { code: 'ZLHAV', name: 'צומת להבים', lat: 31.372500, lon: 34.793333 },
-    { code: 'ZMGID', name: 'צומת מגדי', lat: 31.572778, lon: 35.191111 },
+    { code: 'ZMGID', name: 'צומת מגידו', lat: 32.572778, lon: 35.191111 },
     { code: 'ZMGEN', name: 'צומת מגן', lat: 31.293889, lon: 34.432222 },
     { code: 'NCSHN', name: 'צומת נחשון', lat: 31.815556, lon: 34.916944 },
     { code: 'ARRAD', name: 'צומת ערד', lat: 31.254444, lon: 35.209722 },

@@ -1,6 +1,10 @@
 {
     "rewrites": [
         {
+            "source": "/api/notamdata/(.*)",
+            "destination": "https://www.notammap.org/notamdata/$1"
+        },
+        {
             "source": "/(calculator|navigation|config|checklist)(/.*)?",
             "destination": "/index.html"
         }

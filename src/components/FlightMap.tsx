@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapContainer, ImageOverlay, Polyline, Marker, Tooltip, useMap } from 'react-leaflet';
+import { MapContainer, ImageOverlay, Polyline, Marker, Tooltip, useMap, Popup } from 'react-leaflet';
 import { Eye, EyeOff, Navigation } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import type { FlightLeg } from '../types/navigation';
+import type { FlightLeg, Notam } from '../types/navigation';
 import { waypoints } from '../data/waypoints';
 
 // Fix for default marker icons in React Leaflet
@@ -65,18 +65,37 @@ const fullMapBounds: L.LatLngBoundsExpression = [
     [33.435393, 35.941661]  // Max Lat, Max Lon (NE)
 ];
 
-function MapController({ routeCoords }: { routeCoords: [number, number][] }) {
+function MapController({ routeCoords, userLocation, isTracking }: { routeCoords: [number, number][], userLocation: [number, number] | null, isTracking: boolean }) {
     const map = useMap();
+    const [hasCenteredOnUser, setHasCenteredOnUser] = useState(false);
+
     useEffect(() => {
-        if (routeCoords.length > 0) {
-            const bounds = L.latLngBounds(routeCoords);
-            if (bounds.isValid()) {
-                map.flyToBounds(bounds, { padding: [50, 50], maxZoom: 11, duration: 1 });
-            }
-        } else {
-            map.flyToBounds(fullMapBounds as L.LatLngBoundsExpression, { duration: 1 });
+        let timeoutId: number;
+        if (!isTracking) {
+            timeoutId = window.setTimeout(() => setHasCenteredOnUser(false), 0);
         }
-    }, [map, routeCoords]);
+        return () => window.clearTimeout(timeoutId);
+    }, [isTracking]);
+
+    useEffect(() => {
+        let timeoutId: number;
+        // Only fly to user once when tracking is enabled
+        if (isTracking && userLocation && !hasCenteredOnUser) {
+            map.flyTo(userLocation, 12, { duration: 1.5 });
+            timeoutId = window.setTimeout(() => setHasCenteredOnUser(true), 0);
+        } else if (!isTracking && !hasCenteredOnUser) {
+            // When not tracking, zoom to route or full bounds
+            if (routeCoords.length > 0) {
+                const bounds = L.latLngBounds(routeCoords);
+                if (bounds.isValid()) {
+                    map.flyToBounds(bounds, { padding: [50, 50], maxZoom: 11, duration: 1 });
+                }
+            } else {
+                map.flyToBounds(fullMapBounds as L.LatLngBoundsExpression, { duration: 1 });
+            }
+        }
+        return () => window.clearTimeout(timeoutId);
+    }, [map, routeCoords, userLocation, isTracking, hasCenteredOnUser]);
     return null;
 }
 
@@ -88,6 +107,26 @@ export default function FlightMap({ legs, origin, finalDest }: FlightMapProps) {
     const [isTracking, setIsTracking] = useState(false);
     const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
     const [heading, setHeading] = useState<number | null>(null);
+    const [notams, setNotams] = useState<Notam[]>([]);
+    const [showNotams, setShowNotams] = useState(true);
+
+    useEffect(() => {
+        const fetchNotams = async () => {
+            try {
+                // Use proxy to bypass CORS during development
+                const isDev = import.meta.env.DEV;
+                const url = isDev ? '/api/notamdata/Israel.json' : 'https://www.notammap.org/notamdata/Israel.json';
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data && data.notams) {
+                    setNotams(data.notams);
+                }
+            } catch (error) {
+                console.error("Failed to fetch NOTAMs:", error);
+            }
+        };
+        fetchNotams();
+    }, []);
 
     const toggleTracking = () => {
         if (!isTracking) {
@@ -134,14 +173,14 @@ export default function FlightMap({ legs, origin, finalDest }: FlightMapProps) {
                         console.error("Error getting location:", error);
                         // If there's a permission error, we might want to stop tracking automatically
                         if (error.code === error.PERMISSION_DENIED) {
-                            setIsTracking(false);
+                            setTimeout(() => setIsTracking(false), 0);
                         }
                     },
                     { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
                 );
             } else {
                 console.error("Geolocation is not supported by this browser.");
-                setIsTracking(false);
+                setTimeout(() => setIsTracking(false), 0);
             }
 
             if (window.DeviceOrientationEvent) {
@@ -226,6 +265,16 @@ export default function FlightMap({ legs, origin, finalDest }: FlightMapProps) {
                             <><Eye className="h-4 w-4" /> {t('navPlanner.map.showRoute')}</>
                         )}
                     </button>
+                    <button
+                        onClick={() => setShowNotams(!showNotams)}
+                        className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        {showNotams ? (
+                            <><EyeOff className="h-4 w-4" /> {t('navPlanner.map.hideNotams', 'Hide NOTAMs')}</>
+                        ) : (
+                            <><Eye className="h-4 w-4" /> {t('navPlanner.map.showNotams', 'Show NOTAMs')}</>
+                        )}
+                    </button>
                 </div>
             </div>
             <div className="relative w-full h-[600px] sm:h-[700px] md:h-[800px] z-0 bg-gray-100 dark:bg-gray-900">
@@ -284,6 +333,63 @@ export default function FlightMap({ legs, origin, finalDest }: FlightMapProps) {
                         </Marker>
                     ))}
 
+                    {showNotams && (() => {
+                        // Group NOTAMs by exact coordinates
+                        const groups: { [key: string]: Notam['notam'][] } = {};
+                        notams.forEach(n => {
+                            const notam = n.notam;
+                            if (notam.latitude && notam.longitude && notam.radius !== undefined && notam.radius < 999) {
+                                const key = `${notam.latitude.toFixed(4)},${notam.longitude.toFixed(4)}`;
+                                if (!groups[key]) groups[key] = [];
+                                groups[key].push(notam);
+                            }
+                        });
+
+                        return Object.values(groups).map((group, groupIdx) => {
+                            const firstNotam = group[0];
+
+                            // Show only the first NOTAM, and a +X label if there are more
+                            let html = '<div class="flex flex-col gap-0.5">';
+                            html += `<div class="bg-red-500 text-white border border-white rounded px-2 py-0.5 text-[10px] font-bold shadow-sm whitespace-nowrap text-center">${firstNotam.series}${firstNotam.number}/${firstNotam.year}</div>`;
+
+                            const hiddenCount = group.length - 1;
+                            if (hiddenCount > 0) {
+                                html += `<div class="bg-red-700 text-white border border-white rounded px-2 py-0.5 text-[10px] font-bold shadow-sm whitespace-nowrap text-center">+${hiddenCount} ${t('navPlanner.map.moreNotams', 'More')}</div>`;
+                            }
+                            html += '</div>';
+
+                            const height = (1 + (hiddenCount > 0 ? 1 : 0)) * 24;
+
+                            return (
+                                <Marker
+                                    key={`notam-group-${groupIdx}`}
+                                    position={[firstNotam.latitude!, firstNotam.longitude!]}
+                                    icon={L.divIcon({
+                                        html: html,
+                                        className: '',
+                                        iconSize: [80, height],
+                                        iconAnchor: [40, height / 2],
+                                        popupAnchor: [0, -(height / 2)]
+                                    })}
+                                    zIndexOffset={800}
+                                >
+                                    <Popup>
+                                        <div className="max-h-80 overflow-y-auto max-w-md" dir="ltr">
+                                            {group.map(n => (
+                                                <div key={`${n.series}${n.number}${n.year}`} className="mb-4 last:mb-0">
+                                                    <p className="font-bold mb-1 text-sm text-red-600">NOTAM: {n.series}{n.number}/{n.year}</p>
+                                                    <pre className="text-xs whitespace-pre-wrap font-mono m-0 p-3 bg-gray-100 border border-gray-300 rounded text-gray-800">
+                                                        {n.raw || n.notamText}
+                                                    </pre>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </Popup>
+                                </Marker>
+                            );
+                        });
+                    })()}
+
                     {userLocation && (
                         <Marker
                             position={userLocation}
@@ -296,7 +402,7 @@ export default function FlightMap({ legs, origin, finalDest }: FlightMapProps) {
                         </Marker>
                     )}
 
-                    <MapController routeCoords={routeCoords} />
+                    <MapController routeCoords={routeCoords} userLocation={userLocation} isTracking={isTracking} />
                 </MapContainer>
             </div>
         </div>

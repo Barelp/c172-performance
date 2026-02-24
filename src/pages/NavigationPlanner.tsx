@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Map, Plus, Trash2, Calculator, PlusCircle, Send } from 'lucide-react';
-import type { FlightDetails, FlightLeg } from '../types/navigation';
+import type { FlightDetails, FlightLeg, Notam } from '../types/navigation';
 import { waypoints } from '../data/waypoints';
 import { getAllPresets } from '../data/presets';
 import FlightMap from '../components/FlightMap';
@@ -37,9 +37,74 @@ const initialDetails: FlightDetails = {
 
 export default function NavigationPlanner() {
     const { t } = useTranslation();
-    const [details, setDetails] = useState<FlightDetails>(initialDetails);
-    const [legs, setLegs] = useState<FlightLeg[]>([]);
-    const [activeTab, setActiveTab] = useState<'planner' | 'map'>('planner');
+    const [details, setDetails] = useState<FlightDetails>(() => {
+        try {
+            const saved = localStorage.getItem('navPlannerDetails');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                // Ensure the parsed object has all properties from initialDetails that might be missing
+                return { ...initialDetails, ...parsed };
+            }
+        } catch (e) {
+            console.error('Error loading nav planner details:', e);
+        }
+        return initialDetails;
+    });
+    const [legs, setLegs] = useState<FlightLeg[]>(() => {
+        try {
+            const saved = localStorage.getItem('navPlannerLegs');
+            if (saved) return JSON.parse(saved);
+        } catch (e) {
+            console.error('Error loading nav planner legs:', e);
+        }
+        return [];
+    });
+
+    useEffect(() => {
+        localStorage.setItem('navPlannerDetails', JSON.stringify(details));
+    }, [details]);
+
+    useEffect(() => {
+        localStorage.setItem('navPlannerLegs', JSON.stringify(legs));
+    }, [legs]);
+    const [activeTab, setActiveTab] = useState<'planner' | 'map' | 'notams'>('planner');
+    const [notamsSearch, setNotamsSearch] = useState('');
+    const [fetchedNotams, setFetchedNotams] = useState<Notam[]>([]);
+    const [isLoadingNotams, setIsLoadingNotams] = useState(false);
+
+    const fetchNotams = async () => {
+        setIsLoadingNotams(true);
+        try {
+            const isDev = import.meta.env.DEV;
+            const url = isDev ? '/api/notamdata/Israel.json' : 'https://www.notammap.org/notamdata/Israel.json';
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data && data.notams) {
+                setFetchedNotams(data.notams);
+            }
+        } catch (error) {
+            console.error("Failed to fetch NOTAMs for tab:", error);
+        } finally {
+            setIsLoadingNotams(false);
+        }
+    };
+
+    useEffect(() => {
+        if (activeTab === 'notams' && fetchedNotams.length === 0 && !isLoadingNotams) {
+            fetchNotams();
+        }
+    }, [activeTab, fetchedNotams.length, isLoadingNotams]);
+
+    const filteredNotams = fetchedNotams.filter(n => {
+        if (!notamsSearch) return true;
+        const search = notamsSearch.toLowerCase();
+        const notam = n.notam;
+        return (
+            (notam.series + notam.number).toLowerCase().includes(search) ||
+            (notam.raw && notam.raw.toLowerCase().includes(search)) ||
+            (notam.notamText && notam.notamText.toLowerCase().includes(search))
+        );
+    });
 
     const airportOptions = [
         { code: '', label: '---' },
@@ -202,11 +267,11 @@ export default function NavigationPlanner() {
         // Dev. from Standard = Actual Temp - Standard Temp.
         // Rule of thumb: add 1% to TAS for every 5 degrees C above standard, subtract 1% for 5 degrees below.
 
-        let alt = altitude || 0;
-        let stdTemp = 15 - 2 * (alt / 1000);
-        let tempISA = tempC - stdTemp;
-        let tasBase = ias * (1 + 0.02 * (alt / 1000));
-        let tasFinal = tasBase + tasBase * (tempISA / 5) * 0.01;
+        const alt = altitude || 0;
+        const stdTemp = 15 - 2 * (alt / 1000);
+        const tempISA = tempC - stdTemp;
+        const tasBase = ias * (1 + 0.02 * (alt / 1000));
+        const tasFinal = tasBase + tasBase * (tempISA / 5) * 0.01;
 
         return tasFinal;
     };
@@ -229,7 +294,7 @@ export default function NavigationPlanner() {
         const alt = parseNum(leg.altitude);
         const temp = parseNum(leg.temperature);
 
-        let currentTAS = cruiseIAS > 0 ? Math.round(calculateTAS(cruiseIAS, alt, temp !== 0 ? temp : 15)) : 0;
+        const currentTAS = cruiseIAS > 0 ? Math.round(calculateTAS(cruiseIAS, alt, temp !== 0 ? temp : 15)) : 0;
         let legGS = currentTAS;
         let legWCA = 0;
 
@@ -445,8 +510,8 @@ export default function NavigationPlanner() {
                 <button
                     onClick={() => setActiveTab('planner')}
                     className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'planner'
-                            ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                        ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                         }`}
                 >
                     {t('navPlanner.tabs.planner')}
@@ -454,11 +519,20 @@ export default function NavigationPlanner() {
                 <button
                     onClick={() => setActiveTab('map')}
                     className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'map'
-                            ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                        ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                         }`}
                 >
                     {t('navPlanner.tabs.map')}
+                </button>
+                <button
+                    onClick={() => setActiveTab('notams')}
+                    className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'notams'
+                        ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                        }`}
+                >
+                    {t('navPlanner.tabs.notams', 'NOTAMs')}
                 </button>
             </div>
 
@@ -840,6 +914,75 @@ export default function NavigationPlanner() {
                 </div>
             )}
 
+            {activeTab === 'notams' && (
+                <div className="animate-in fade-in duration-300 space-y-6">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <div className="flex items-center gap-4 w-full sm:w-auto">
+                                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                                    {t('navPlanner.notams.title', 'NOTAMs List')}
+                                </h3>
+                                <button
+                                    onClick={fetchNotams}
+                                    disabled={isLoadingNotams}
+                                    className="p-1.5 text-gray-500 hover:text-aviation-blue dark:text-gray-400 dark:hover:text-blue-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                                    title={t('navPlanner.notams.refresh', 'Refresh NOTAMs')}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={isLoadingNotams ? "animate-spin text-aviation-blue" : ""}>
+                                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                                        <path d="M3 3v5h5" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div className="w-full sm:w-1/2 lg:w-1/3">
+                                <input
+                                    type="text"
+                                    placeholder={t('navPlanner.notams.searchPlaceholder', 'Search by ID or text...')}
+                                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue text-sm"
+                                    value={notamsSearch}
+                                    onChange={(e) => setNotamsSearch(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="p-4">
+                            {isLoadingNotams ? (
+                                <div className="flex justify-center items-center py-12">
+                                    <svg className="animate-spin h-8 w-8 text-aviation-blue" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                </div>
+                            ) : filteredNotams.length > 0 ? (
+                                <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+                                    {filteredNotams.map(n => {
+                                        const notam = n.notam;
+                                        return (
+                                            <div key={n.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-900/50 hover:bg-white dark:hover:bg-gray-800 transition-colors">
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <span className="font-bold text-red-600 text-lg">NOTAM: {notam.series}{notam.number}/{notam.year}</span>
+                                                    {notam.latitude && notam.longitude && (
+                                                        <span className="text-xs text-gray-500 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">
+                                                            {notam.latitude.toFixed(4)}, {notam.longitude.toFixed(4)}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <pre className="text-sm whitespace-pre-wrap font-mono m-0 text-gray-800 dark:text-gray-300">
+                                                    {notam.raw || notam.notamText}
+                                                </pre>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                                    {notamsSearch ? t('navPlanner.notams.noResults', 'No NOTAMs matched your search.') : t('navPlanner.notams.empty', 'No NOTAMs available.')}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
             {/* Datalist for Airports */}
             <datalist id="airports-list">
                 {airportOptions.filter(opt => opt.code !== '').map(opt => (

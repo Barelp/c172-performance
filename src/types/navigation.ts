@@ -40,3 +40,17 @@ export interface FlightDetails {
     callsign: string;
     flightRules: 'V' | 'I';
 }
+
+export interface Notam {
+    id: number;
+    notam: {
+        raw: string;
+        series: string;
+        number: number;
+        year: number;
+        latitude: number;
+        longitude: number;
+        radius: number;
+        notamText: string;
+    };
+}
