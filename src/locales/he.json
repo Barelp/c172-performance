@@ -128,10 +128,17 @@
     },
     "navPlanner": {
         "title": "עזר לתכנון ניווט ודלק",
+        "tabs": {
+            "planner": "תכנון נתיב",
+            "map": "מפת ניווט"
+        },
         "map": {
             "title": "מפת נתיבי תובלה נמוכים",
             "showRoute": "הצג נתיב",
             "hideRoute": "הסתר נתיב",
+            "trackLocation": "עקוב אחריי",
+            "stopTracking": "הפסק מעקב",
+            "myLocation": "המיקום שלי",
             "imageNotFound": "תמונת מפה לא נמצאה",
             "imageErrorDesc": "אנא ודא שהמפה שמורה כ-flight-map.jpg תחת תיקיית public של הפרוייקט."
         },

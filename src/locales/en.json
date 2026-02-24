@@ -128,10 +128,17 @@
     },
     "navPlanner": {
         "title": "Navigation & Fuel Planner",
+        "tabs": {
+            "planner": "Flight Planner",
+            "map": "Navigation Map"
+        },
         "map": {
             "title": "Low Altitude Navigation Map",
             "showRoute": "Show Route",
             "hideRoute": "Hide Route",
+            "trackLocation": "Track Me",
+            "stopTracking": "Stop Tracking",
+            "myLocation": "My Location",
             "imageNotFound": "Map Image Not Found",
             "imageErrorDesc": "Please ensure the map is saved as flight-map.jpg in the public folder of the project."
         },

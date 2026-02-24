@@ -39,6 +39,7 @@ export default function NavigationPlanner() {
     const { t } = useTranslation();
     const [details, setDetails] = useState<FlightDetails>(initialDetails);
     const [legs, setLegs] = useState<FlightLeg[]>([]);
+    const [activeTab, setActiveTab] = useState<'planner' | 'map'>('planner');
 
     const airportOptions = [
         { code: '', label: '---' },
@@ -439,378 +440,405 @@ export default function NavigationPlanner() {
                 </div>
             </div>
 
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4 rounded-md shadow-sm">
-                <div className="flex">
-                    <div className="ml-3">
-                        <p className="text-sm text-yellow-700 dark:text-yellow-400 font-medium">
-                            {t('navPlanner.warning')}
-                        </p>
-                    </div>
-                </div>
+            {/* Tabs Navigation */}
+            <div className="flex space-x-4 border-b border-gray-200 dark:border-gray-700 mb-6 rtl:space-x-reverse">
+                <button
+                    onClick={() => setActiveTab('planner')}
+                    className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'planner'
+                            ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                        }`}
+                >
+                    {t('navPlanner.tabs.planner')}
+                </button>
+                <button
+                    onClick={() => setActiveTab('map')}
+                    className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'map'
+                            ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                        }`}
+                >
+                    {t('navPlanner.tabs.map')}
+                </button>
             </div>
 
-            {/* General Details Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-                {/* General Details & Flight Route */}
-                <div className="lg:col-span-2 flex flex-col gap-6">
-                    {/* General Details */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-                        <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                                <Calculator className="h-5 w-5" />
-                                {t('navPlanner.generalDetails')}
-                            </h3>
-                        </div>
-                        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.flightDate')}</label>
-                                <input type="date" value={details.flightDate} onChange={e => handleDetailChange('flightDate', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.takeoffTime')}</label>
-                                <input type="time" value={details.takeoffTime} onChange={e => handleDetailChange('takeoffTime', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.cruiseGS')}</label>
-                                <input type="number" value={details.cruiseGS} onChange={e => handleDetailChange('cruiseGS', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.cruiseGPH')}</label>
-                                <input type="number" step="0.1" value={details.cruiseGPH} onChange={e => handleDetailChange('cruiseGPH', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.taxiFuel')}</label>
-                                <input type="number" step="0.1" value={details.taxiFuel} onChange={e => handleDetailChange('taxiFuel', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.tocFuel')}</label>
-                                <input type="number" step="0.1" value={details.tocFuel} onChange={e => handleDetailChange('tocFuel', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+            {activeTab === 'planner' && (
+                <div className="space-y-6 animate-in fade-in duration-300">
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4 rounded-md shadow-sm">
+                        <div className="flex">
+                            <div className="ml-3">
+                                <p className="text-sm text-yellow-700 dark:text-yellow-400 font-medium">
+                                    {t('navPlanner.warning')}
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Flight Route Details */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-                        <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.routeDetails')}</h3>
-                        </div>
-                        <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                            <div>
-                                <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.origin')}</label>
-                                <input type="text" list="airports-list" value={details.origin} onChange={e => handleDetailChange('origin', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.landing1')}</label>
-                                <input type="text" list="airports-list" value={details.landing1} onChange={e => handleDetailChange('landing1', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.landing2')}</label>
-                                <input type="text" list="airports-list" value={details.landing2} onChange={e => handleDetailChange('landing2', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.finalDest')}</label>
-                                <input type="text" list="airports-list" value={details.finalDest} onChange={e => handleDetailChange('finalDest', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
-                            </div>
-                        </div>
+                    {/* General Details Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                        <div className="px-4 pb-4">
-                            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">{t('navPlanner.alternate')}</h4>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.altName')}</label>
-                                    <input type="text" value={details.altName} onChange={e => handleDetailChange('altName', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" />
+                        {/* General Details & Flight Route */}
+                        <div className="lg:col-span-2 flex flex-col gap-6">
+                            {/* General Details */}
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                                <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                                        <Calculator className="h-5 w-5" />
+                                        {t('navPlanner.generalDetails')}
+                                    </h3>
                                 </div>
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.altFreq')}</label>
-                                    <input type="text" value={details.altFreq} onChange={e => handleDetailChange('altFreq', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" />
+                                <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.flightDate')}</label>
+                                        <input type="date" value={details.flightDate} onChange={e => handleDetailChange('flightDate', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.takeoffTime')}</label>
+                                        <input type="time" value={details.takeoffTime} onChange={e => handleDetailChange('takeoffTime', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.cruiseGS')}</label>
+                                        <input type="number" value={details.cruiseGS} onChange={e => handleDetailChange('cruiseGS', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.cruiseGPH')}</label>
+                                        <input type="number" step="0.1" value={details.cruiseGPH} onChange={e => handleDetailChange('cruiseGPH', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.taxiFuel')}</label>
+                                        <input type="number" step="0.1" value={details.taxiFuel} onChange={e => handleDetailChange('taxiFuel', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.tocFuel')}</label>
+                                        <input type="number" step="0.1" value={details.tocFuel} onChange={e => handleDetailChange('tocFuel', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                </div>
-            </div>
+                            {/* Flight Route Details */}
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                                <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.routeDetails')}</h3>
+                                </div>
+                                <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.origin')}</label>
+                                        <input type="text" list="airports-list" value={details.origin} onChange={e => handleDetailChange('origin', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.landing1')}</label>
+                                        <input type="text" list="airports-list" value={details.landing1} onChange={e => handleDetailChange('landing1', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.landing2')}</label>
+                                        <input type="text" list="airports-list" value={details.landing2} onChange={e => handleDetailChange('landing2', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.finalDest')}</label>
+                                        <input type="text" list="airports-list" value={details.finalDest} onChange={e => handleDetailChange('finalDest', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
+                                    </div>
+                                </div>
 
-            {/* Legs Table Section */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-                <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.legsTable.to')} / {t('navPlanner.legsTable.from')}</h3>
-                    <button
-                        onClick={addLeg}
-                        className="flex items-center gap-1 bg-aviation-blue hover:bg-blue-800 text-white px-3 py-1.5 rounded-md text-sm transition-colors"
-                    >
-                        <Plus className="h-4 w-4" /> {t('navPlanner.addLeg')}
-                    </button>
-                </div>
-
-                <div className="overflow-x-auto">
-                    <table className="w-full min-w-max text-sm text-left">
-                        <thead className="text-xs text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 whitespace-nowrap">
-                            <tr>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.from')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.to')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.dist')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.time')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.timeOverPoint')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.fuelGal')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.heading')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.windDir')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.windSpeed')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.altitude')}</th>
-                                <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.temperature')}</th>
-                                <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.tas')}</th>
-                                <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.wca')}</th>
-                                <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.gs')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.trend')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.control')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.primaryFreq')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.secondaryFreq')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.vorName')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.vorRadial')}</th>
-                                <th className="px-3 py-2">{t('navPlanner.legsTable.vorDist')}</th>
-                                <th className="px-3 py-2 text-center whitespace-nowrap">+/-</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {calculatedLegs.map((leg, index) => (
-                                <tr key={leg.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                                    <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.from} onChange={e => handleLegChange(leg.id, 'from', e.target.value)} className="w-28 sm:w-36 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
-                                    <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.to} onChange={e => handleLegChange(leg.id, 'to', e.target.value)} className="w-28 sm:w-36 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
-                                    <td className="px-2 py-1"><input type="number" value={leg.distNM} onChange={e => handleLegChange(leg.id, 'distNM', e.target.value)} className="w-12 sm:w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                    <td className="px-2 py-1 font-mono text-center text-gray-600 dark:text-gray-400">{leg.flightTimeStr}</td>
-                                    <td className="px-2 py-1 font-mono text-center text-gray-600 dark:text-gray-400">{leg.timeOverPoint}</td>
-                                    <td className="px-2 py-1 text-center font-medium text-aviation-blue dark:text-blue-400">{leg.fuelUsed.toFixed(1)}</td>
-
-                                    <td className="px-2 py-1"><input type="text" placeholder="°" value={leg.heading} onChange={e => handleLegChange(leg.id, 'heading', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                    <td className="px-2 py-1"><input type="text" placeholder="°" value={leg.windDir} onChange={e => handleLegChange(leg.id, 'windDir', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                    <td className="px-2 py-1"><input type="number" placeholder="KT" value={leg.windSpeed} onChange={e => handleLegChange(leg.id, 'windSpeed', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                    <td className="px-2 py-1"><input type="text" value={leg.altitude} onChange={e => handleLegChange(leg.id, 'altitude', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                    <td className="px-2 py-1"><input type="number" placeholder="°C" value={leg.temperature} onChange={e => handleLegChange(leg.id, 'temperature', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-
-                                    <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400 font-bold">
-                                        {leg.calculatedTAS > 0 ? Math.round(leg.calculatedTAS) : '-'}
-                                    </td>
-                                    <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400">
-                                        {leg.calculatedWCA !== 0 ? (leg.calculatedWCA > 0 ? `+${leg.calculatedWCA.toFixed(0)}°` : `${leg.calculatedWCA.toFixed(0)}°`) : '-'}
-                                    </td>
-                                    <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400 font-bold">
-                                        {Math.round(leg.calculatedGS)}
-                                    </td>
-
-                                    <td className="px-2 py-1">
-                                        <select value={leg.trend} onChange={e => handleLegChange(leg.id, 'trend', e.target.value)} className="w-20 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600">
-                                            <option value="">-</option>
-                                            <option value="climb">{t('navPlanner.trendOptions.climb')}</option>
-                                            <option value="descent">{t('navPlanner.trendOptions.descent')}</option>
-                                            <option value="noChange">{t('navPlanner.trendOptions.noChange')}</option>
-                                        </select>
-                                    </td>
-                                    <td className="px-2 py-1"><input type="text" value={leg.control} onChange={e => handleLegChange(leg.id, 'control', e.target.value)} className="w-20 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
-
-                                    <td className="px-2 py-1"><input type="text" value={leg.primaryFreq} onChange={e => handleLegChange(leg.id, 'primaryFreq', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                    <td className="px-2 py-1"><input type="text" value={leg.secondaryFreq} onChange={e => handleLegChange(leg.id, 'secondaryFreq', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-
-                                    <td className="px-2 py-1"><input type="text" value={leg.vorName} onChange={e => handleLegChange(leg.id, 'vorName', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
-                                    <td className="px-2 py-1"><input type="text" value={leg.vorRadial} onChange={e => handleLegChange(leg.id, 'vorRadial', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                    <td className="px-2 py-1"><input type="text" value={leg.vorDist} onChange={e => handleLegChange(leg.id, 'vorDist', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-
-                                    <td className="px-2 py-1 text-center whitespace-nowrap">
-                                        <button onClick={() => insertLeg(index + 1)} title={t('navPlanner.insertLeg')} className="text-green-500 hover:text-green-700 transition-colors p-1">
-                                            <PlusCircle className="h-4 w-4" />
-                                        </button>
-                                        <button onClick={() => removeLeg(leg.id)} title={t('navPlanner.removeLeg')} className="text-red-500 hover:text-red-700 transition-colors p-1">
-                                            <Trash2 className="h-4 w-4" />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    {legs.length === 0 && (
-                        <div className="py-8 text-center text-gray-500 italic">
-                            No legs added yet. Click "Add Leg" to start.
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Summary Grid */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-                <div className="bg-aviation-blue px-4 py-3">
-                    <h3 className="text-lg font-bold text-white">{t('navPlanner.summary.title')}</h3>
-                </div>
-                <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                        <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                            <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.totalTime')}</span>
-                            <span className="font-mono bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded text-lg font-bold">{formatDuration(totalTimeHours)}</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                            <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.totalDist')}</span>
-                            <span className="font-mono px-3 py-1 rounded text-lg font-bold">{totalDist.toFixed(1)} NM</span>
-                        </div>
-                    </div>
-                    <div className="space-y-3">
-                        <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                            <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reserve45')}</span>
-                            <span className="font-mono text-yellow-600 dark:text-yellow-400 font-bold">{reserve45.toFixed(1)}</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                            <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reqFuelNoReserve')}</span>
-                            <span className="font-mono">{reqFuelNoReserve.toFixed(1)}</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 bg-green-50 dark:bg-green-900/20 px-2 rounded">
-                            <span className="text-gray-700 dark:text-gray-300 font-bold">{t('navPlanner.summary.reqFuel45Min')}</span>
-                            <span className="font-mono text-green-700 dark:text-green-400 font-bold text-lg">{reqFuel45Min.toFixed(1)}</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 px-2">
-                            <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reqFuel60Min')}</span>
-                            <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">{reqFuel60Min.toFixed(1)}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Map Section */}
-            <div className="mt-8">
-                <FlightMap legs={calculatedLegs} origin={details.origin} finalDest={details.finalDest} />
-            </div>
-
-            {/* Flight Status (Moved to Bottom) */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 mt-8">
-                <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.flightStatus')}</h3>
-                </div>
-                <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                    <div className="grid grid-cols-3 items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotName')}</label>
-                        <input type="text" value={details.pilotName} onChange={e => handleDetailChange('pilotName', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
-                    </div>
-                    <div className="grid grid-cols-3 items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotLicense')}</label>
-                        <input type="text" value={details.pilotLicense} onChange={e => handleDetailChange('pilotLicense', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
-                    </div>
-                    <div className="grid grid-cols-3 items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotPhone')}</label>
-                        <input type="text" value={details.pilotPhone} onChange={e => handleDetailChange('pilotPhone', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
-                    </div>
-                    <div className="grid grid-cols-3 items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotEmail')}</label>
-                        <input type="email" value={details.pilotEmail} onChange={e => handleDetailChange('pilotEmail', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
-                    </div>
-
-                    <div className="grid grid-cols-3 items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.departureDest')}</label>
-                        <div className="col-span-2 flex gap-2">
-                            <input type="text" value={details.origin} readOnly className="flex-1 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" placeholder={t('navPlanner.origin')} />
-                            <input type="text" value={details.finalDest} readOnly className="flex-1 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" placeholder={t('navPlanner.finalDest')} />
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-3 items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.paxCount')}</label>
-                        <input type="text" value={details.paxCount} onChange={e => handleDetailChange('paxCount', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
-                    </div>
-                    <div className="grid grid-cols-3 items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.flightEndurance')}</label>
-                        <input type="text" value={details.flightEndurance} onChange={e => handleDetailChange('flightEndurance', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
-                    </div>
-                    <div className="grid grid-cols-3 items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.aircraftType')}</label>
-                        <input type="text" value="Cessna 172" readOnly className="col-span-2 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" />
-                    </div>
-                    <div className="grid grid-cols-3 items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.flightRules')}</label>
-                        <select value={details.flightRules} onChange={e => handleDetailChange('flightRules', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center font-bold">
-                            <option value="V">VFR</option>
-                            <option value="I">IFR</option>
-                        </select>
-                    </div>
-                    <div className="grid grid-cols-3 items-center gap-2 md:col-start-1">
-                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.callsign')}</label>
-                        <select value={details.callsign} onChange={e => handleDetailChange('callsign', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center font-bold">
-                            {callsignOptions.map(opt => <option key={`callsign-${opt}`} value={opt}>{opt || '---'}</option>)}
-                        </select>
-                    </div>
-                </div>
-
-                {/* ICAO Generation Button */}
-                <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
-                    <button
-                        onClick={generateICAO}
-                        disabled={isGenerating}
-                        className={`w-full md:w-auto px-6 py-2 font-medium rounded-md shadow-sm transition-all duration-200 flex items-center justify-center gap-2 ${isGenerating
-                            ? 'bg-green-600 hover:bg-green-700 text-white transform scale-95'
-                            : 'bg-aviation-blue hover:bg-blue-800 text-white'
-                            }`}
-                    >
-                        {isGenerating && (
-                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                        )}
-                        {isGenerating ? t('navPlanner.icaoGenerated') : t('navPlanner.generateICAO')}
-                    </button>
-
-                    {icaoError && (
-                        <div className="mt-3 text-sm text-red-600 dark:text-red-400 font-medium bg-red-50 dark:bg-red-900/20 p-2 rounded border border-red-200 dark:border-red-800">
-                            {icaoError}
-                        </div>
-                    )}
-
-                    {icaoPlan && (
-                        <div className="mt-4">
-                            <h4 className="text-sm font-semibold text-green-600 dark:text-green-400 mb-2">{t('navPlanner.icaoGenerated')}</h4>
-                            <textarea
-                                readOnly
-                                value={icaoPlan}
-                                rows={8}
-                                className="w-full p-3 font-mono text-xs bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-aviation-blue mb-3"
-                            />
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                                <button
-                                    onClick={sendEmail}
-                                    disabled={isSendingEmail}
-                                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center min-w-[160px]"
-                                >
-                                    {isSendingEmail ? (
-                                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                        </svg>
-                                    ) : (
-                                        <Send className="mr-2 h-4 w-4" />
-                                    )}
-                                    {isSendingEmail ? t('navPlanner.emailSending') : t('navPlanner.sendEmail')}
-                                </button>
-                                {emailStatus && (
-                                    <span className={`text-sm font-medium ${emailStatus.type === 'success' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                                        {emailStatus.message}
-                                    </span>
-                                )}
-                            </div>
-
-                            {sentEmailsLogs.length > 0 && (
-                                <div className="mt-4 space-y-3">
-                                    {sentEmailsLogs.map((log, index) => (
-                                        <div key={index} className="p-4 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800 animate-in fade-in slide-in-from-top-2 duration-300">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <h5 className="font-semibold text-green-800 dark:text-green-300">{t('navPlanner.emailSentDetails')} #{index + 1}</h5>
-                                                <span className="text-xs text-green-600 dark:text-green-400 font-mono">{log.time}</span>
-                                            </div>
-                                            <ul className="text-sm text-green-700 dark:text-green-400 space-y-1.5 list-disc list-inside">
-                                                <li><strong>{t('navPlanner.emailTo')}</strong> <span className="dir-ltr inline-block" dir="ltr">{log.to}</span></li>
-                                                <li><strong>{t('navPlanner.emailSubject')}</strong> <span className="dir-ltr inline-block" dir="ltr">{log.subject}</span></li>
-                                            </ul>
+                                <div className="px-4 pb-4">
+                                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">{t('navPlanner.alternate')}</h4>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.altName')}</label>
+                                            <input type="text" value={details.altName} onChange={e => handleDetailChange('altName', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" />
                                         </div>
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.altFreq')}</label>
+                                            <input type="text" value={details.altFreq} onChange={e => handleDetailChange('altFreq', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/* Legs Table Section */}
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.legsTable.to')} / {t('navPlanner.legsTable.from')}</h3>
+                            <button
+                                onClick={addLeg}
+                                className="flex items-center gap-1 bg-aviation-blue hover:bg-blue-800 text-white px-3 py-1.5 rounded-md text-sm transition-colors"
+                            >
+                                <Plus className="h-4 w-4" /> {t('navPlanner.addLeg')}
+                            </button>
+                        </div>
+
+                        <div className="overflow-x-auto">
+                            <table className="w-full min-w-max text-sm text-left">
+                                <thead className="text-xs text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 whitespace-nowrap">
+                                    <tr>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.from')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.to')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.dist')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.time')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.timeOverPoint')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.fuelGal')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.heading')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.windDir')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.windSpeed')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.altitude')}</th>
+                                        <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.temperature')}</th>
+                                        <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.tas')}</th>
+                                        <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.wca')}</th>
+                                        <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.gs')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.trend')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.control')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.primaryFreq')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.secondaryFreq')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.vorName')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.vorRadial')}</th>
+                                        <th className="px-3 py-2">{t('navPlanner.legsTable.vorDist')}</th>
+                                        <th className="px-3 py-2 text-center whitespace-nowrap">+/-</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {calculatedLegs.map((leg, index) => (
+                                        <tr key={leg.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                            <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.from} onChange={e => handleLegChange(leg.id, 'from', e.target.value)} className="w-28 sm:w-36 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
+                                            <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.to} onChange={e => handleLegChange(leg.id, 'to', e.target.value)} className="w-28 sm:w-36 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
+                                            <td className="px-2 py-1"><input type="number" value={leg.distNM} onChange={e => handleLegChange(leg.id, 'distNM', e.target.value)} className="w-12 sm:w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                            <td className="px-2 py-1 font-mono text-center text-gray-600 dark:text-gray-400">{leg.flightTimeStr}</td>
+                                            <td className="px-2 py-1 font-mono text-center text-gray-600 dark:text-gray-400">{leg.timeOverPoint}</td>
+                                            <td className="px-2 py-1 text-center font-medium text-aviation-blue dark:text-blue-400">{leg.fuelUsed.toFixed(1)}</td>
+
+                                            <td className="px-2 py-1"><input type="text" placeholder="°" value={leg.heading} onChange={e => handleLegChange(leg.id, 'heading', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                            <td className="px-2 py-1"><input type="text" placeholder="°" value={leg.windDir} onChange={e => handleLegChange(leg.id, 'windDir', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                            <td className="px-2 py-1"><input type="number" placeholder="KT" value={leg.windSpeed} onChange={e => handleLegChange(leg.id, 'windSpeed', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                            <td className="px-2 py-1"><input type="text" value={leg.altitude} onChange={e => handleLegChange(leg.id, 'altitude', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                            <td className="px-2 py-1"><input type="number" placeholder="°C" value={leg.temperature} onChange={e => handleLegChange(leg.id, 'temperature', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+
+                                            <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400 font-bold">
+                                                {leg.calculatedTAS > 0 ? Math.round(leg.calculatedTAS) : '-'}
+                                            </td>
+                                            <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400">
+                                                {leg.calculatedWCA !== 0 ? (leg.calculatedWCA > 0 ? `+${leg.calculatedWCA.toFixed(0)}°` : `${leg.calculatedWCA.toFixed(0)}°`) : '-'}
+                                            </td>
+                                            <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400 font-bold">
+                                                {Math.round(leg.calculatedGS)}
+                                            </td>
+
+                                            <td className="px-2 py-1">
+                                                <select value={leg.trend} onChange={e => handleLegChange(leg.id, 'trend', e.target.value)} className="w-20 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600">
+                                                    <option value="">-</option>
+                                                    <option value="climb">{t('navPlanner.trendOptions.climb')}</option>
+                                                    <option value="descent">{t('navPlanner.trendOptions.descent')}</option>
+                                                    <option value="noChange">{t('navPlanner.trendOptions.noChange')}</option>
+                                                </select>
+                                            </td>
+                                            <td className="px-2 py-1"><input type="text" value={leg.control} onChange={e => handleLegChange(leg.id, 'control', e.target.value)} className="w-20 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
+
+                                            <td className="px-2 py-1"><input type="text" value={leg.primaryFreq} onChange={e => handleLegChange(leg.id, 'primaryFreq', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                            <td className="px-2 py-1"><input type="text" value={leg.secondaryFreq} onChange={e => handleLegChange(leg.id, 'secondaryFreq', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+
+                                            <td className="px-2 py-1"><input type="text" value={leg.vorName} onChange={e => handleLegChange(leg.id, 'vorName', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
+                                            <td className="px-2 py-1"><input type="text" value={leg.vorRadial} onChange={e => handleLegChange(leg.id, 'vorRadial', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                            <td className="px-2 py-1"><input type="text" value={leg.vorDist} onChange={e => handleLegChange(leg.id, 'vorDist', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+
+                                            <td className="px-2 py-1 text-center whitespace-nowrap">
+                                                <button onClick={() => insertLeg(index + 1)} title={t('navPlanner.insertLeg')} className="text-green-500 hover:text-green-700 transition-colors p-1">
+                                                    <PlusCircle className="h-4 w-4" />
+                                                </button>
+                                                <button onClick={() => removeLeg(leg.id)} title={t('navPlanner.removeLeg')} className="text-red-500 hover:text-red-700 transition-colors p-1">
+                                                    <Trash2 className="h-4 w-4" />
+                                                </button>
+                                            </td>
+                                        </tr>
                                     ))}
+                                </tbody>
+                            </table>
+                            {legs.length === 0 && (
+                                <div className="py-8 text-center text-gray-500 italic">
+                                    No legs added yet. Click "Add Leg" to start.
                                 </div>
                             )}
                         </div>
-                    )}
+                    </div>
+
+                    {/* Summary Grid */}
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <div className="bg-aviation-blue px-4 py-3">
+                            <h3 className="text-lg font-bold text-white">{t('navPlanner.summary.title')}</h3>
+                        </div>
+                        <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                                    <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.totalTime')}</span>
+                                    <span className="font-mono bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded text-lg font-bold">{formatDuration(totalTimeHours)}</span>
+                                </div>
+                                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                                    <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.totalDist')}</span>
+                                    <span className="font-mono px-3 py-1 rounded text-lg font-bold">{totalDist.toFixed(1)} NM</span>
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                                    <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reserve45')}</span>
+                                    <span className="font-mono text-yellow-600 dark:text-yellow-400 font-bold">{reserve45.toFixed(1)}</span>
+                                </div>
+                                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                                    <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reqFuelNoReserve')}</span>
+                                    <span className="font-mono">{reqFuelNoReserve.toFixed(1)}</span>
+                                </div>
+                                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 bg-green-50 dark:bg-green-900/20 px-2 rounded">
+                                    <span className="text-gray-700 dark:text-gray-300 font-bold">{t('navPlanner.summary.reqFuel45Min')}</span>
+                                    <span className="font-mono text-green-700 dark:text-green-400 font-bold text-lg">{reqFuel45Min.toFixed(1)}</span>
+                                </div>
+                                <div className="flex justify-between items-center py-2 px-2">
+                                    <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reqFuel60Min')}</span>
+                                    <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">{reqFuel60Min.toFixed(1)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Flight Status (Moved to Bottom) */}
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 mt-8">
+                        <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.flightStatus')}</h3>
+                        </div>
+                        <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                            <div className="grid grid-cols-3 items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotName')}</label>
+                                <input type="text" value={details.pilotName} onChange={e => handleDetailChange('pilotName', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                            </div>
+                            <div className="grid grid-cols-3 items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotLicense')}</label>
+                                <input type="text" value={details.pilotLicense} onChange={e => handleDetailChange('pilotLicense', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                            </div>
+                            <div className="grid grid-cols-3 items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotPhone')}</label>
+                                <input type="text" value={details.pilotPhone} onChange={e => handleDetailChange('pilotPhone', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                            </div>
+                            <div className="grid grid-cols-3 items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotEmail')}</label>
+                                <input type="email" value={details.pilotEmail} onChange={e => handleDetailChange('pilotEmail', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                            </div>
+
+                            <div className="grid grid-cols-3 items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.departureDest')}</label>
+                                <div className="col-span-2 flex gap-2">
+                                    <input type="text" value={details.origin} readOnly className="flex-1 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" placeholder={t('navPlanner.origin')} />
+                                    <input type="text" value={details.finalDest} readOnly className="flex-1 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" placeholder={t('navPlanner.finalDest')} />
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-3 items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.paxCount')}</label>
+                                <input type="text" value={details.paxCount} onChange={e => handleDetailChange('paxCount', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                            </div>
+                            <div className="grid grid-cols-3 items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.flightEndurance')}</label>
+                                <input type="text" value={details.flightEndurance} onChange={e => handleDetailChange('flightEndurance', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                            </div>
+                            <div className="grid grid-cols-3 items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.aircraftType')}</label>
+                                <input type="text" value="Cessna 172" readOnly className="col-span-2 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" />
+                            </div>
+                            <div className="grid grid-cols-3 items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.flightRules')}</label>
+                                <select value={details.flightRules} onChange={e => handleDetailChange('flightRules', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center font-bold">
+                                    <option value="V">VFR</option>
+                                    <option value="I">IFR</option>
+                                </select>
+                            </div>
+                            <div className="grid grid-cols-3 items-center gap-2 md:col-start-1">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.callsign')}</label>
+                                <select value={details.callsign} onChange={e => handleDetailChange('callsign', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center font-bold">
+                                    {callsignOptions.map(opt => <option key={`callsign-${opt}`} value={opt}>{opt || '---'}</option>)}
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* ICAO Generation Button */}
+                        <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+                            <button
+                                onClick={generateICAO}
+                                disabled={isGenerating}
+                                className={`w-full md:w-auto px-6 py-2 font-medium rounded-md shadow-sm transition-all duration-200 flex items-center justify-center gap-2 ${isGenerating
+                                    ? 'bg-green-600 hover:bg-green-700 text-white transform scale-95'
+                                    : 'bg-aviation-blue hover:bg-blue-800 text-white'
+                                    }`}
+                            >
+                                {isGenerating && (
+                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                )}
+                                {isGenerating ? t('navPlanner.icaoGenerated') : t('navPlanner.generateICAO')}
+                            </button>
+
+                            {icaoError && (
+                                <div className="mt-3 text-sm text-red-600 dark:text-red-400 font-medium bg-red-50 dark:bg-red-900/20 p-2 rounded border border-red-200 dark:border-red-800">
+                                    {icaoError}
+                                </div>
+                            )}
+
+                            {icaoPlan && (
+                                <div className="mt-4">
+                                    <h4 className="text-sm font-semibold text-green-600 dark:text-green-400 mb-2">{t('navPlanner.icaoGenerated')}</h4>
+                                    <textarea
+                                        readOnly
+                                        value={icaoPlan}
+                                        rows={8}
+                                        className="w-full p-3 font-mono text-xs bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-aviation-blue mb-3"
+                                    />
+                                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                                        <button
+                                            onClick={sendEmail}
+                                            disabled={isSendingEmail}
+                                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center min-w-[160px]"
+                                        >
+                                            {isSendingEmail ? (
+                                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                            ) : (
+                                                <Send className="mr-2 h-4 w-4" />
+                                            )}
+                                            {isSendingEmail ? t('navPlanner.emailSending') : t('navPlanner.sendEmail')}
+                                        </button>
+                                        {emailStatus && (
+                                            <span className={`text-sm font-medium ${emailStatus.type === 'success' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                                                {emailStatus.message}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    {sentEmailsLogs.length > 0 && (
+                                        <div className="mt-4 space-y-3">
+                                            {sentEmailsLogs.map((log, index) => (
+                                                <div key={index} className="p-4 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800 animate-in fade-in slide-in-from-top-2 duration-300">
+                                                    <div className="flex justify-between items-center mb-2">
+                                                        <h5 className="font-semibold text-green-800 dark:text-green-300">{t('navPlanner.emailSentDetails')} #{index + 1}</h5>
+                                                        <span className="text-xs text-green-600 dark:text-green-400 font-mono">{log.time}</span>
+                                                    </div>
+                                                    <ul className="text-sm text-green-700 dark:text-green-400 space-y-1.5 list-disc list-inside">
+                                                        <li><strong>{t('navPlanner.emailTo')}</strong> <span className="dir-ltr inline-block" dir="ltr">{log.to}</span></li>
+                                                        <li><strong>{t('navPlanner.emailSubject')}</strong> <span className="dir-ltr inline-block" dir="ltr">{log.subject}</span></li>
+                                                    </ul>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
-            </div>
+            )}
+
+            {activeTab === 'map' && (
+                <div className="animate-in fade-in duration-300">
+                    <FlightMap legs={calculatedLegs} origin={details.origin} finalDest={details.finalDest} />
+                </div>
+            )}
 
             {/* Datalist for Airports */}
             <datalist id="airports-list">

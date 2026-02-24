@@ -11,7 +11,7 @@ export const waypoints: Waypoint[] = [
     { code: 'ZMGEN', name: 'צומת מגן', lat: 31.293889, lon: 34.432222 },
     { code: 'NCSHN', name: 'צומת נחשון', lat: 31.815556, lon: 34.916944 },
     { code: 'ARRAD', name: 'צומת ערד', lat: 31.254444, lon: 35.209722 },
-    { code: 'FRDIS', name: 'צומת פוריידיס', lat: 32.591944, lon: 34.946389 },
+    { code: 'FRDIS', name: 'צומת פורדיס', lat: 32.591944, lon: 34.946389 },
     { code: 'FAZEL', name: 'צומת פצאל', lat: 32.048056, lon: 35.463056 },
     { code: 'ZZHOR', name: 'צומת ציחור', lat: 30.277222, lon: 35.020000 },
     { code: 'ZAFIT', name: 'צומת צפית', lat: 31.042500, lon: 35.199722 },
