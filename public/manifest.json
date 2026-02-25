@@ -1,7 +1,7 @@
 {
-    "name": "Cessna 172 Weight & Balance Calculator",
-    "short_name": "C172 W&B",
-    "description": "Weight and Balance Calculator for Cessna 172 aircraft",
+    "name": "Cessna 172 for IL",
+    "short_name": "C172 IL",
+    "description": "Pilot tools for Cessna 172 IL",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
