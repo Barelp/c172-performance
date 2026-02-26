@@ -4,7 +4,8 @@
     "nav": {
         "wb": "Weight & Balance",
         "config": "Configuration",
-        "navPlanner": "Nav Planner"
+        "navPlanner": "Nav Planner",
+        "contact": "Contact Us"
     },
     "config": {
         "title": "Aircraft Configuration",

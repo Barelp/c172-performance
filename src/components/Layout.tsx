@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Settings, Gauge, Sun, Moon, Map } from 'lucide-react';
+import { Settings, Gauge, Sun, Moon, Map, MessageCircle } from 'lucide-react';
 import cessnaBanner from '../resources/cessna_wallpaper.jpg';
 import { useTheme } from '../context/ThemeContext';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -48,6 +48,9 @@ export default function Layout() {
                             <Link to="/config" className={`px-4 py-2 rounded-md text-sm font-semibold backdrop-blur-md border border-white/30 flex items-center gap-2 transition-all ${location.pathname === '/config' ? 'bg-white text-aviation-blue shadow-lg' : 'bg-white/20 text-white hover:bg-white/30'}`}>
                                 <Settings className="h-4 w-4" /> {t('nav.config')}
                             </Link>
+                            <a href="https://github.com/Barelp/c172-performance/issues/new" target="_blank" rel="noopener noreferrer" className="px-4 py-2 rounded-md text-sm font-semibold backdrop-blur-md border border-white/30 flex items-center gap-2 transition-all bg-white/20 text-white hover:bg-white/30">
+                                <MessageCircle className="h-4 w-4" /> {t('nav.contact')}
+                            </a>
                         </nav>
 
                         {/* Theme Toggle */}
@@ -88,6 +91,10 @@ export default function Layout() {
                     <Settings className="h-5 w-5" />
                     <span className="text-[10px] mt-1 uppercase font-bold tracking-tighter text-gray-400">{t('nav.config')}</span>
                 </Link>
+                <a href="https://github.com/Barelp/c172-performance/issues/new" target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center py-3 text-gray-500">
+                    <MessageCircle className="h-5 w-5" />
+                    <span className="text-[10px] mt-1 uppercase font-bold tracking-tighter text-gray-400">{t('nav.contact')}</span>
+                </a>
             </nav>
         </div>
     );
