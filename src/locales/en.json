@@ -194,6 +194,7 @@
         "generateICAO": "Generate ICAO Flight Plan",
         "icaoGenerated": "Flight Plan Generated Successfully",
         "sendEmail": "Send Plan to מודיעין טיס",
+        "emailUnavailable": "Flight plan submission is currently unavailable - under maintenance",
         "emailSending": "Sending...",
         "emailSent": "Email Sent Successfully",
         "emailSentDetails": "Transmission Details:",

@@ -194,6 +194,7 @@
         "generateICAO": "יצירת תוכנית טיסה (ICAO)",
         "icaoGenerated": "תוכנית הטיסה נוצרה בהצלחה",
         "sendEmail": "שליחת תוכנית טיסה למודיעין טיס",
+        "emailUnavailable": "שליחת התוכנית אינה זמינה כרגע - בתיקון",
         "emailSending": "שולח...",
         "emailSent": "האימייל נשלח בהצלחה",
         "emailSentDetails": "פרטי השליחה:",
