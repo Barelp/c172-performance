@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Map, Plus, Trash2, Calculator, PlusCircle, Send, AlertTriangle, RefreshCw } from 'lucide-react';
+import { Map, Plus, Trash2, Calculator, PlusCircle, Send, AlertTriangle, RefreshCw, Search } from 'lucide-react';
 import type { FlightDetails, FlightLeg, Notam } from '../types/navigation';
 import { waypoints } from '../data/waypoints';
 import { getAllPresets } from '../data/presets';
@@ -870,31 +870,33 @@ export default function NavigationPlanner() {
                                 <AlertTriangle className="h-6 w-6 text-white" />
                                 <h3 className="text-xl font-bold text-white">{t('navPlanner.notams.title', 'NOTAMs List')} <span className="text-sm font-normal opacity-75">(notammap.org)</span></h3>
                             </div>
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
-                                <div className="flex items-center gap-4 text-white">
-                                    {notamsFileDate && (
-                                        <span className="text-sm opacity-90 font-mono hidden sm:inline-block">
-                                            {t('navPlanner.notams.lastUpdate', 'Last Updated:')} {new Date(notamsFileDate).toLocaleString('he-IL', { dateStyle: 'short', timeStyle: 'short' })}
-                                        </span>
-                                    )}
-                                    <button
-                                        onClick={fetchNotams}
-                                        disabled={isLoadingNotams}
-                                        className={`p-1.5 text-white hover:text-blue-200 rounded-lg hover:bg-white/10 transition ${isLoadingNotams ? "opacity-50" : ""}`}
-                                        title={t('navPlanner.notams.refresh', 'Refresh NOTAMs')}
-                                    >
-                                        <RefreshCw className={`h-[18px] w-[18px] ${isLoadingNotams ? 'animate-spin' : ''}`} strokeWidth={2} />
-                                    </button>
-                                </div>
-                                <div className="w-full sm:w-64">
-                                    <input
-                                        type="text"
-                                        placeholder={t('navPlanner.notams.searchPlaceholder', 'Search by ID or text...')}
-                                        className="w-full p-2 border border-blue-400/30 rounded-md bg-white/10 text-white placeholder-blue-200 focus:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm transition-colors"
-                                        value={notamsSearch}
-                                        onChange={(e) => setNotamsSearch(e.target.value)}
-                                    />
-                                </div>
+                            <div className="flex items-center gap-4 text-white w-full sm:w-auto sm:justify-end">
+                                {notamsFileDate && (
+                                    <span className="text-sm opacity-90 font-mono hidden sm:inline-block">
+                                        {t('navPlanner.notams.lastUpdate', 'Last Updated:')} {new Date(notamsFileDate).toLocaleString('he-IL', { dateStyle: 'short', timeStyle: 'short' })}
+                                    </span>
+                                )}
+                                <button
+                                    onClick={fetchNotams}
+                                    disabled={isLoadingNotams}
+                                    className={`p-1.5 text-white hover:text-blue-200 rounded-lg hover:bg-white/10 transition ${isLoadingNotams ? "opacity-50" : ""}`}
+                                    title={t('navPlanner.notams.refresh', 'Refresh NOTAMs')}
+                                >
+                                    <RefreshCw className={`h-[18px] w-[18px] ${isLoadingNotams ? 'animate-spin' : ''}`} strokeWidth={2} />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/20">
+                            <div className="relative max-w-sm">
+                                <Search className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                                <input
+                                    type="text"
+                                    placeholder={t('navPlanner.notams.searchPlaceholder', 'Search by ID or text...')}
+                                    className="w-full pl-9 pr-4 rtl:pr-9 rtl:pl-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-900 focus:ring-2 focus:ring-aviation-blue focus:border-transparent outline-none transition-shadow text-gray-900 dark:text-gray-100"
+                                    value={notamsSearch}
+                                    onChange={(e) => setNotamsSearch(e.target.value)}
+                                />
                             </div>
                         </div>
 

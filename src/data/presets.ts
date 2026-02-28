@@ -251,3 +251,47 @@ export function getAllPresets(): Array<{ id: string; name: string; tailNumber: s
 export function getPresetAircraft(id: string): Aircraft | undefined {
     return Object.values(PRESET_AIRCRAFT).find(a => a.id === id);
 }
+
+export const AIRCRAFT_CONFIG_KEY = 'c172_aircraft_config';
+export const CUSTOM_LIST_KEY = 'c172_custom_aircraft_list';
+
+/** Returns all user-saved custom aircraft from localStorage. */
+export function getCustomAircraftList(): Aircraft[] {
+    try {
+        const raw = localStorage.getItem(CUSTOM_LIST_KEY);
+        return raw ? JSON.parse(raw) : [];
+    } catch {
+        return [];
+    }
+}
+
+/** Add or update a custom aircraft in the list (matched by id). */
+export function saveCustomAircraft(aircraft: Aircraft): void {
+    const list = getCustomAircraftList();
+    const idx = list.findIndex(a => a.id === aircraft.id);
+    if (idx >= 0) {
+        list[idx] = aircraft;
+    } else {
+        list.push(aircraft);
+    }
+    localStorage.setItem(CUSTOM_LIST_KEY, JSON.stringify(list));
+}
+
+/** Remove one custom aircraft by id. */
+export function deleteCustomAircraft(id: string): void {
+    const list = getCustomAircraftList().filter(a => a.id !== id);
+    localStorage.setItem(CUSTOM_LIST_KEY, JSON.stringify(list));
+}
+
+/** Remove ALL custom aircraft and clear current config. */
+export function deleteAllCustomAircraft(): void {
+    localStorage.removeItem(CUSTOM_LIST_KEY);
+}
+
+/**
+ * @deprecated use getCustomAircraftList() instead.
+ * Returns a single custom aircraft (first in list), or undefined.
+ */
+export function getCustomAircraft(): Aircraft | undefined {
+    return getCustomAircraftList()[0];
+}

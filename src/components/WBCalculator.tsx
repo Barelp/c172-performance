@@ -3,7 +3,7 @@ import CGChart from './CGChart';
 import StationDiagram from './StationDiagramNew';
 import Tooltip from './Tooltip';
 import { Package, ChevronDown, ChevronUp, HelpCircle, PlaneTakeoff, PlaneLanding, Trash2, Settings, Users, AlertTriangle } from 'lucide-react';
-import { getAllPresets, getPresetAircraft } from '../data/presets';
+import { getAllPresets, getPresetAircraft, getCustomAircraftList } from '../data/presets';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { UnitSystem } from '../types';
@@ -12,6 +12,7 @@ export default function WBCalculator() {
   const { flight, setFlight, aircraft, setAircraft, results } = useWeightAndBalance();
   const [showDetails, setShowDetails] = useState(true);
   const { t } = useTranslation();
+  const customList = getCustomAircraftList();
 
   const isKg = flight.unitPreference === 'KG';
   // Helpers
@@ -53,10 +54,23 @@ export default function WBCalculator() {
   };
 
   const handleAircraftChange = (id: string) => {
+    // First check custom aircraft list
+    const customMatch = customList.find(ac => ac.id === id);
+    if (customMatch) {
+      setAircraft(customMatch);
+      setFlight(prev => ({
+        ...prev,
+        aircraftId: customMatch.id,
+        fuelLeftGallons: customMatch.fuelCapacity / 2,
+        fuelRightGallons: customMatch.fuelCapacity / 2,
+        fuelGallons: customMatch.fuelCapacity,
+        fuelBurnGallons: 0,
+      }));
+      return;
+    }
     const preset = getPresetAircraft(id);
     if (preset) {
       setAircraft(preset);
-      // Synchronize flight data with new aircraft specs
       setFlight(prev => ({
         ...prev,
         aircraftId: preset.id,
@@ -171,6 +185,15 @@ export default function WBCalculator() {
                 onChange={(e) => handleAircraftChange(e.target.value)}
                 className="block w-full rounded-md border-gray-200 dark:border-gray-600 bg-gray-50/50 dark:bg-gray-700/50 py-2.5 ps-3 pe-10 text-sm font-semibold text-aviation-black dark:text-white focus:border-aviation-blue focus:ring-aviation-blue transition shadow-sm appearance-none"
               >
+                {customList.length > 0 && (
+                  <optgroup label="★ My Aircraft">
+                    {customList.map(ac => (
+                      <option key={ac.id} value={ac.id}>
+                        {ac.tailNumber} (BEW: {ac.basicEmptyWeight.toFixed(0)} | MTW: {ac.maxTakeoffWeight.toFixed(0)})
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
                 {getAllPresets().map(preset => (
                   <option key={preset.id} value={preset.id}>
                     {preset.name}

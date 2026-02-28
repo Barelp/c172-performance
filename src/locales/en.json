@@ -36,7 +36,14 @@
         "savedSuccess": "Configuration saved successfully",
         "noteTitle": "Note",
         "noteContent": "These settings are saved to your browser's local storage and will persist across sessions. The empty weight moment is automatically calculated from the weight and arm values.",
-        "presetInstruction": "Click a preset to load its configuration. Don't forget to save after loading."
+        "presetInstruction": "Click a preset to load its configuration. Don't forget to save after loading.",
+        "addNewAircraft": "+ Add New Aircraft",
+        "newAircraftMode": "New Aircraft Configuration",
+        "newAircraftNote": "Fill in all fields for the new aircraft and save.",
+        "cancelNew": "Cancel",
+        "tailNumberPlaceholder": "e.g. 4X-CDO",
+        "myAircraft": "My Aircraft",
+        "validationError": "Please fill in all required fields:"
     },
     "stations": {
         "pilot_front_pax": "Pilot & Front Passenger",

@@ -36,7 +36,14 @@
         "savedSuccess": "ההגדרות נשמרו בהצלחה",
         "noteTitle": "הערה",
         "noteContent": "הגדרות אלו נשמרות בדפדפן שלך וישמרו בין הפעלות. מומנט המשקל הריק מחושב אוטומטית לפי המשקל והזרוע.",
-        "presetInstruction": "לחץ על תבנית לטעינת הגדרות. אל תשכח לשמור לאחר הטעינה."
+        "presetInstruction": "לחץ על תבנית לטעינת הגדרות. אל תשכח לשמור לאחר הטעינה.",
+        "addNewAircraft": "+ הוסף מטוס חדש",
+        "newAircraftMode": "הגדרת מטוס חדש",
+        "newAircraftNote": "מלא את כל השדות עבור המטוס החדש ושמור.",
+        "cancelNew": "ביטול",
+        "tailNumberPlaceholder": "למשל 4X-CDO",
+        "myAircraft": "המטוסים שלי",
+        "validationError": "יש למלא את כל השדות הנדרשים:"
     },
     "stations": {
         "pilot_front_pax": "טייס ונוסע מלפנים",

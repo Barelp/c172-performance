@@ -26,6 +26,22 @@ export function useWeightAndBalance(initialFlight?: FlightLog) {
 
     const [aircraft, setAircraft] = useState<Aircraft>(() => {
         const stored = localStorage.getItem('c172_aircraft_config');
+
+        // Standard C172 normal-category envelope used as fallback for custom aircraft
+        const DEFAULT_CG_LIMITS = {
+            fwd_low: { weight: 1950, arm: 35.0 },
+            fwd_high: { weight: 2400, arm: 39.2 },
+            aft: 47.3,
+        };
+        const DEFAULT_ENVELOPE_POINTS = [
+            { x: 35.0, y: 1500 },
+            { x: 35.0, y: 1950 },
+            { x: 39.2, y: 2400 },
+            { x: 47.3, y: 2400 },
+            { x: 47.3, y: 1500 },
+            { x: 35.0, y: 1500 },
+        ];
+
         if (stored) {
             const parsed = JSON.parse(stored);
             // Refresh static data from preset if available to get latest envelope/limits
@@ -46,7 +62,13 @@ export function useWeightAndBalance(initialFlight?: FlightLog) {
                     // basicEmptyWeight/Arm are preserved from 'parsed' as user might have customized them
                 };
             }
-            return parsed;
+            // Custom (non-preset) aircraft: ensure cgLimits and envelopePoints are valid
+            const hasValidLimits = parsed.cgLimits?.fwd_high?.arm > 0 && parsed.cgLimits?.aft > 0;
+            return {
+                ...parsed,
+                cgLimits: hasValidLimits ? parsed.cgLimits : DEFAULT_CG_LIMITS,
+                envelopePoints: parsed.envelopePoints?.length ? parsed.envelopePoints : DEFAULT_ENVELOPE_POINTS,
+            };
         }
         return DEFAULT_AIRCRAFT;
     });
