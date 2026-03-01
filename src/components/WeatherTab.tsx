@@ -359,40 +359,45 @@ export default function WeatherTab() {
         <div className="space-y-6 animate-in fade-in duration-300">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div className="bg-aviation-blue px-4 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-4">
-                    {/* Title & Mobile Refresh */}
-                    <div className="flex items-center justify-between w-full sm:w-auto gap-2">
-                        <div className="flex items-center gap-3 min-w-0">
-                            <CloudRain className="h-6 w-6 text-white shrink-0" />
-                            <h3 className="text-xl font-bold text-white truncate">{t('navPlanner.weather.title')}</h3>
-                        </div>
-                        <button
-                            onClick={fetchWeather}
-                            disabled={isLoading}
-                            className={`sm:hidden shrink-0 flex items-center gap-1.5 p-1.5 bg-white/10 text-white hover:text-blue-200 border border-white/20 rounded-lg hover:bg-white/20 transition ${isLoading ? "opacity-50" : ""}`}
-                            title={t('navPlanner.weather.refresh')}
-                        >
-                            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} strokeWidth={2} />
-                            <span className="text-xs font-medium pr-1 whitespace-nowrap">
-                                {lastUpdate ? lastUpdate.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }) : ''}
-                            </span>
-                        </button>
+                    {/* Title */}
+                    <div className="flex items-center gap-3 w-full sm:w-auto min-w-0">
+                        <CloudRain className="h-6 w-6 text-white shrink-0" />
+                        <h3 className="text-xl font-bold text-white break-words w-full pr-2">
+                            {t('navPlanner.weather.title')}
+                        </h3>
                     </div>
 
                     {/* Actions Box */}
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto text-white">
-                        <div className="bg-white/10 p-1 rounded-lg flex items-center w-full sm:w-auto">
+                    <div className="flex flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto text-white mt-1 sm:mt-0">
+                        {/* Mobile Refresh (Now moved to same line as Raw/Decoded) */}
+                        <button
+                            onClick={fetchWeather}
+                            disabled={isLoading}
+                            className={`sm:hidden shrink-0 flex items-center justify-center p-2 bg-white/10 text-white hover:text-blue-200 border border-white/20 rounded-lg hover:bg-white/20 transition ${isLoading ? "opacity-50" : ""}`}
+                            title={t('navPlanner.weather.refresh')}
+                        >
+                            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} strokeWidth={2} />
+                            {lastUpdate && (
+                                <span className="text-xs font-semibold ml-1.5 whitespace-nowrap">
+                                    {lastUpdate.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                            )}
+                        </button>
+
+                        {/* Raw / Decoded Toggles */}
+                        <div className="bg-white/10 p-1 rounded-lg flex items-center flex-1 sm:flex-none">
                             <button
                                 onClick={() => setViewMode('raw')}
-                                className={`flex-1 sm:flex-none justify-center px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 ${viewMode === 'raw' ? 'bg-white text-aviation-blue shadow-sm' : 'text-white hover:bg-white/20'}`}
+                                className={`flex-1 sm:flex-none justify-center px-2 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 ${viewMode === 'raw' ? 'bg-white text-aviation-blue shadow-sm' : 'text-white hover:bg-white/20'}`}
                             >
-                                <Code className="h-4 w-4" />
+                                <Code className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                 {t('navPlanner.weather.raw', 'Raw')}
                             </button>
                             <button
                                 onClick={() => setViewMode('decoded')}
-                                className={`flex-1 sm:flex-none justify-center px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 ${viewMode === 'decoded' ? 'bg-white text-aviation-blue shadow-sm' : 'text-white hover:bg-white/20'}`}
+                                className={`flex-1 sm:flex-none justify-center px-2 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 ${viewMode === 'decoded' ? 'bg-white text-aviation-blue shadow-sm' : 'text-white hover:bg-white/20'}`}
                             >
-                                <FileText className="h-4 w-4" />
+                                <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                 {t('navPlanner.weather.decoded', 'Decoded')}
                             </button>
                         </div>
