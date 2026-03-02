@@ -74,7 +74,14 @@ export default function NavigationPlanner() {
     const [fetchedNotams, setFetchedNotams] = useState<Notam[]>([]);
     const [notamsFileDate, setNotamsFileDate] = useState<string | null>(null);
     const [isLoadingNotams, setIsLoadingNotams] = useState(false);
-    const [notamViewMode, setNotamViewMode] = useState<'raw' | 'decoded'>('decoded');
+    const [notamViewMode, setNotamViewMode] = useState<'raw' | 'decoded'>(() => {
+        const saved = localStorage.getItem('notamViewMode');
+        return (saved === 'raw' || saved === 'decoded') ? saved : 'raw';
+    });
+
+    useEffect(() => {
+        localStorage.setItem('notamViewMode', notamViewMode);
+    }, [notamViewMode]);
 
     const fetchNotams = async () => {
         setIsLoadingNotams(true);
@@ -880,10 +887,11 @@ export default function NavigationPlanner() {
 
                             {/* Actions Box */}
                             <div className="flex flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto text-white mt-1 sm:mt-0">
+                                {/* Mobile Refresh */}
                                 <button
                                     onClick={fetchNotams}
                                     disabled={isLoadingNotams}
-                                    className={`shrink-0 flex items-center justify-center p-2 bg-white/10 text-white hover:text-blue-200 border border-white/20 rounded-lg hover:bg-white/20 transition ${isLoadingNotams ? "opacity-50" : ""}`}
+                                    className={`sm:hidden shrink-0 flex items-center justify-center p-2 bg-white/10 text-white hover:text-blue-200 border border-white/20 rounded-lg hover:bg-white/20 transition ${isLoadingNotams ? "opacity-50" : ""}`}
                                     title={t('navPlanner.notams.refresh', 'Refresh NOTAMs')}
                                 >
                                     <RefreshCw className={`h-4 w-4 ${isLoadingNotams ? 'animate-spin' : ''}`} strokeWidth={2} />
@@ -909,6 +917,23 @@ export default function NavigationPlanner() {
                                     >
                                         <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                         {t('navPlanner.notams.decoded', 'Decoded')}
+                                    </button>
+                                </div>
+
+                                {/* Desktop Refresh & Time */}
+                                <div className="hidden sm:flex items-center gap-4">
+                                    {notamsFileDate && (
+                                        <span className="text-sm opacity-90 font-mono">
+                                            {t('navPlanner.weather.lastUpdate', 'Last Updated:')} {new Date(notamsFileDate).toLocaleString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    )}
+                                    <button
+                                        onClick={fetchNotams}
+                                        disabled={isLoadingNotams}
+                                        className={`p-1.5 text-white hover:text-blue-200 rounded-lg hover:bg-white/10 transition ${isLoadingNotams ? "opacity-50" : ""}`}
+                                        title={t('navPlanner.notams.refresh', 'Refresh NOTAMs')}
+                                    >
+                                        <RefreshCw className={`h-[18px] w-[18px] ${isLoadingNotams ? 'animate-spin' : ''}`} strokeWidth={2} />
                                     </button>
                                 </div>
                             </div>

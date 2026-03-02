@@ -21,7 +21,14 @@ export default function WeatherTab() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-    const [viewMode, setViewMode] = useState<'raw' | 'decoded'>('raw');
+    const [viewMode, setViewMode] = useState<'raw' | 'decoded'>(() => {
+        const saved = localStorage.getItem('weatherViewMode');
+        return (saved === 'raw' || saved === 'decoded') ? saved : 'raw';
+    });
+
+    useEffect(() => {
+        localStorage.setItem('weatherViewMode', viewMode);
+    }, [viewMode]);
     const [searchQuery, setSearchQuery] = useState('');
 
     const fetchWeather = async () => {
@@ -405,7 +412,7 @@ export default function WeatherTab() {
                         <div className="hidden sm:flex items-center gap-4">
                             {lastUpdate && (
                                 <span className="text-sm opacity-90 font-mono">
-                                    {t('navPlanner.weather.lastUpdate')} {lastUpdate.toLocaleTimeString('he-IL')}
+                                    {t('navPlanner.weather.lastUpdate')} {lastUpdate.toLocaleString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                 </span>
                             )}
                             <button
