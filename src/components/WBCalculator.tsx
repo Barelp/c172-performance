@@ -7,6 +7,7 @@ import { getAllPresets, getPresetAircraft, getCustomAircraftList } from '../data
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { UnitSystem } from '../types';
+import SEO from './SEO';
 
 export default function WBCalculator() {
   const { flight, setFlight, aircraft, setAircraft, results } = useWeightAndBalance();
@@ -117,6 +118,10 @@ export default function WBCalculator() {
 
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 transition-colors duration-300">
+      <SEO
+        title={t('calculator.title', 'Weight & Balance')}
+        description={t('calculator.description', 'Calculate weight and balance, center of gravity, and performance limits for the Cessna 172.')}
+      />
 
       {/* Header Banner */}
       <div className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4 mb-6">

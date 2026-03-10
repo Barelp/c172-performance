@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Settings, Save, RotateCcw, Plane, PlusCircle, X, Trash2, CheckCircle2 } from 'lucide-react';
+import SEO from '../components/SEO';
 import type { Aircraft } from '../types';
 import { DEFAULT_AIRCRAFT } from '../data/c172s';
 import {
@@ -120,7 +121,7 @@ export default function Config() {
 
         const updatedAircraft = {
             ...aircraft,
-            id: isNewMode ? `custom_${aircraft.tailNumber || Date.now()}` : aircraft.id,
+            id: isNewMode ? `custom_${aircraft.tailNumber || Date.now()} ` : aircraft.id,
             basicEmptyMoment: aircraft.basicEmptyWeight * aircraft.emptyWeightArm,
             // For custom aircraft always recalculate limits from MTW; keep preset limits untouched
             ...(isCustomAircraft && {
@@ -205,6 +206,10 @@ export default function Config() {
 
     return (
         <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6 transition-colors duration-300">
+            <SEO
+                title={t('config.title', 'Aircraft Configuration')}
+                description={t('config.seoDescription', 'Configure aircraft details, basic empty weight, and center of gravity for your Cessna 172.')}
+            />
             <div className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4 mb-6">
                 <Settings className="h-8 w-8 text-aviation-blue dark:text-blue-400" />
                 <div>

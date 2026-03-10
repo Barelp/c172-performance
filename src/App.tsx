@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 import Layout from './components/Layout';
 import WBCalculator from './components/WBCalculator';
 import Config from './pages/Config';
+import SEO from './components/SEO';
 import NavigationPlanner from './pages/NavigationPlanner';
 import { ThemeContext } from './context/ThemeContext';
 
@@ -28,6 +29,7 @@ function App() {
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <BrowserRouter>
+        <SEO />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Navigate to="/calculator" replace />} />

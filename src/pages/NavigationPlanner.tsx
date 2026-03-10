@@ -7,6 +7,7 @@ import { waypoints } from '../data/waypoints';
 import { getAllPresets } from '../data/presets';
 import FlightMap from '../components/FlightMap';
 import WeatherTab from '../components/WeatherTab';
+import SEO from '../components/SEO';
 
 const getTodayDate = () => {
     const today = new Date();
@@ -275,8 +276,6 @@ export default function NavigationPlanner() {
         // Using a simpler common aviation rule of thumb: +2% per 1000ft, plus ~1% for every 5C above standard temperature.
         // Or the standard: TAS = IAS * (1 + (Altitude / 1000) * 0.02)
         // Let's use standard rule of thumb for standard temp, but adjust by temperature roughly.
-        // Actually, the simplest accurate enough formula: TAS = IAS * (1 + 0.02 * (Altitude / 1000))
-        // We'll ignore temp for the basic rule if altitude is only thing provided, but since temp is provided,
         // Standard temp at altitude = 15 - 2 * (Alt/1000).
         // Dev. from Standard = Actual Temp - Standard Temp.
         // Rule of thumb: add 1% to TAS for every 5 degrees C above standard, subtract 1% for 5 degrees below.
@@ -464,340 +463,347 @@ export default function NavigationPlanner() {
 
 
     return (
-        <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-24">
-            <div className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
-                <Map className="h-8 w-8 text-aviation-blue dark:text-blue-400" />
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('navPlanner.title')}</h2>
+        <div className="w-full">
+            <SEO
+                title={t('navigation.title', 'Navigation Planner')}
+                description={t('navigation.description', 'Plan your flight navigation, calculate headings, wind correction, and ground speed for the Cessna 172.')}
+                keywords="Navigation Planner, Flight Planning, Cessna 172, NOTAM, AVIATION WEATHER, LLHZ, שדה התעופה הרצליה"
+            />
+            <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-24">
+                <div className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <Map className="h-8 w-8 text-aviation-blue dark:text-blue-400" />
+                    <div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('navPlanner.title')}</h2>
+                    </div>
                 </div>
-            </div>
 
-            {/* Tabs Navigation */}
-            <div className="flex space-x-4 border-b border-gray-200 dark:border-gray-700 mb-6 rtl:space-x-reverse">
-                <button
-                    onClick={() => setActiveTab('planner')}
-                    className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'planner'
-                        ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                        }`}
-                >
-                    {t('navPlanner.tabs.planner')}
-                </button>
-                <button
-                    onClick={() => setActiveTab('map')}
-                    className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'map'
-                        ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                        }`}
-                >
-                    {t('navPlanner.tabs.map')}
-                </button>
-                <button
-                    onClick={() => setActiveTab('notams')}
-                    className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'notams'
-                        ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                        }`}
-                >
-                    {t('navPlanner.tabs.notams', 'NOTAMs')}
-                </button>
-                <button
-                    onClick={() => setActiveTab('weather')}
-                    className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'weather'
-                        ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                        }`}
-                >
-                    {t('navPlanner.tabs.weather')}
-                </button>
-            </div>
+                {/* Tabs Navigation */}
+                <div className="flex space-x-4 border-b border-gray-200 dark:border-gray-700 mb-6 rtl:space-x-reverse">
+                    <button
+                        onClick={() => setActiveTab('planner')}
+                        className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'planner'
+                            ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                            }`}
+                    >
+                        {t('navPlanner.tabs.planner')}
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('map')}
+                        className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'map'
+                            ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                            }`}
+                    >
+                        {t('navPlanner.tabs.map')}
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('notams')}
+                        className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'notams'
+                            ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                            }`}
+                    >
+                        {t('navPlanner.tabs.notams', 'NOTAMs')}
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('weather')}
+                        className={`pb-2 px-2 border-b-2 font-medium text-sm transition-colors ${activeTab === 'weather'
+                            ? 'border-aviation-blue text-aviation-blue dark:border-blue-400 dark:text-blue-400'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                            }`}
+                    >
+                        {t('navPlanner.tabs.weather')}
+                    </button>
+                </div>
 
-            {activeTab === 'planner' && (
-                <div className="space-y-6 animate-in fade-in duration-300">
-                    <div className="bg-amber-100 dark:bg-amber-900/30 border-l-4 border-amber-500 text-amber-700 dark:text-amber-400 p-4 rounded-r shadow-sm flex items-start gap-3">
-                        <AlertTriangle className="h-6 w-6 flex-shrink-0" />
-                        <p className="font-bold text-sm md:text-base">
-                            {t('navPlanner.warning')}
-                        </p>
-                    </div>
+                {activeTab === 'planner' && (
+                    <div className="space-y-6 animate-in fade-in duration-300">
+                        <div className="bg-amber-100 dark:bg-amber-900/30 border-l-4 border-amber-500 text-amber-700 dark:text-amber-400 p-4 rounded-r shadow-sm flex items-start gap-3">
+                            <AlertTriangle className="h-6 w-6 flex-shrink-0" />
+                            <p className="font-bold text-sm md:text-base">
+                                {t('navPlanner.warning')}
+                            </p>
+                        </div>
 
-                    {/* General Details Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* General Details Grid */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                        {/* General Details & Flight Route */}
-                        <div className="lg:col-span-2 flex flex-col gap-6">
-                            {/* General Details */}
-                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-                                <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                                        <Calculator className="h-5 w-5" />
-                                        {t('navPlanner.generalDetails')}
-                                    </h3>
-                                </div>
-                                <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.flightDate')}</label>
-                                        <input type="date" value={details.flightDate} onChange={e => handleDetailChange('flightDate', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                            {/* General Details & Flight Route */}
+                            <div className="lg:col-span-2 flex flex-col gap-6">
+                                {/* General Details */}
+                                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                                    <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                                            <Calculator className="h-5 w-5" />
+                                            {t('navPlanner.generalDetails')}
+                                        </h3>
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.takeoffTime')}</label>
-                                        <input type="time" value={details.takeoffTime} onChange={e => handleDetailChange('takeoffTime', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.cruiseGS')}</label>
-                                        <input type="number" value={details.cruiseGS} onChange={e => handleDetailChange('cruiseGS', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.cruiseGPH')}</label>
-                                        <input type="number" step="0.1" value={details.cruiseGPH} onChange={e => handleDetailChange('cruiseGPH', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.taxiFuel')}</label>
-                                        <input type="number" step="0.1" value={details.taxiFuel} onChange={e => handleDetailChange('taxiFuel', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.tocFuel')}</label>
-                                        <input type="number" step="0.1" value={details.tocFuel} onChange={e => handleDetailChange('tocFuel', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Flight Route Details */}
-                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-                                <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.routeDetails')}</h3>
-                                </div>
-                                <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.origin')}</label>
-                                        <input type="text" list="airports-list" value={details.origin} onChange={e => handleDetailChange('origin', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.landing1')}</label>
-                                        <input type="text" list="airports-list" value={details.landing1} onChange={e => handleDetailChange('landing1', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.landing2')}</label>
-                                        <input type="text" list="airports-list" value={details.landing2} onChange={e => handleDetailChange('landing2', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.finalDest')}</label>
-                                        <input type="text" list="airports-list" value={details.finalDest} onChange={e => handleDetailChange('finalDest', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
-                                    </div>
-                                </div>
-
-                                <div className="px-4 pb-4">
-                                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">{t('navPlanner.alternate')}</h4>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.altName')}</label>
-                                            <input type="text" value={details.altName} onChange={e => handleDetailChange('altName', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" />
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.flightDate')}</label>
+                                            <input type="date" value={details.flightDate} onChange={e => handleDetailChange('flightDate', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.altFreq')}</label>
-                                            <input type="text" value={details.altFreq} onChange={e => handleDetailChange('altFreq', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" />
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.takeoffTime')}</label>
+                                            <input type="time" value={details.takeoffTime} onChange={e => handleDetailChange('takeoffTime', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.cruiseGS')}</label>
+                                            <input type="number" value={details.cruiseGS} onChange={e => handleDetailChange('cruiseGS', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.cruiseGPH')}</label>
+                                            <input type="number" step="0.1" value={details.cruiseGPH} onChange={e => handleDetailChange('cruiseGPH', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.taxiFuel')}</label>
+                                            <input type="number" step="0.1" value={details.taxiFuel} onChange={e => handleDetailChange('taxiFuel', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('navPlanner.tocFuel')}</label>
+                                            <input type="number" step="0.1" value={details.tocFuel} onChange={e => handleDetailChange('tocFuel', e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-aviation-blue" />
                                         </div>
                                     </div>
                                 </div>
+
+                                {/* Flight Route Details */}
+                                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                                    <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.routeDetails')}</h3>
+                                    </div>
+                                    <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.origin')}</label>
+                                            <input type="text" list="airports-list" value={details.origin} onChange={e => handleDetailChange('origin', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.landing1')}</label>
+                                            <input type="text" list="airports-list" value={details.landing1} onChange={e => handleDetailChange('landing1', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.landing2')}</label>
+                                            <input type="text" list="airports-list" value={details.landing2} onChange={e => handleDetailChange('landing2', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.finalDest')}</label>
+                                            <input type="text" list="airports-list" value={details.finalDest} onChange={e => handleDetailChange('finalDest', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="---" />
+                                        </div>
+                                    </div>
+
+                                    <div className="px-4 pb-4">
+                                        <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">{t('navPlanner.alternate')}</h4>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.altName')}</label>
+                                                <input type="text" value={details.altName} onChange={e => handleDetailChange('altName', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-medium text-gray-500 mb-1">{t('navPlanner.altFreq')}</label>
+                                                <input type="text" value={details.altFreq} onChange={e => handleDetailChange('altFreq', e.target.value)} className="w-full p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        {/* Legs Table Section */}
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                            <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.legsTable.to')} / {t('navPlanner.legsTable.from')}</h3>
+                                <button
+                                    onClick={addLeg}
+                                    className="flex items-center gap-1 bg-aviation-blue hover:bg-blue-800 text-white px-3 py-1.5 rounded-md text-sm transition-colors"
+                                >
+                                    <Plus className="h-4 w-4" /> {t('navPlanner.addLeg')}
+                                </button>
                             </div>
 
-                        </div>
-                    </div>
-
-                    {/* Legs Table Section */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-                        <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.legsTable.to')} / {t('navPlanner.legsTable.from')}</h3>
-                            <button
-                                onClick={addLeg}
-                                className="flex items-center gap-1 bg-aviation-blue hover:bg-blue-800 text-white px-3 py-1.5 rounded-md text-sm transition-colors"
-                            >
-                                <Plus className="h-4 w-4" /> {t('navPlanner.addLeg')}
-                            </button>
-                        </div>
-
-                        <div className="overflow-x-auto">
-                            <table className="w-full min-w-max text-sm text-left">
-                                <thead className="text-xs text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 whitespace-nowrap">
-                                    <tr>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.from')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.to')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.dist')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.time')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.timeOverPoint')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.fuelGal')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.heading')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.windDir')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.windSpeed')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.altitude')}</th>
-                                        <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.temperature')}</th>
-                                        <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.tas')}</th>
-                                        <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.wca')}</th>
-                                        <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.gs')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.trend')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.control')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.primaryFreq')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.secondaryFreq')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.vorName')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.vorRadial')}</th>
-                                        <th className="px-3 py-2">{t('navPlanner.legsTable.vorDist')}</th>
-                                        <th className="px-3 py-2 text-center whitespace-nowrap">+/-</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {calculatedLegs.map((leg, index) => (
-                                        <tr key={leg.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                                            <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.from} onChange={e => handleLegChange(leg.id, 'from', e.target.value)} className="w-28 sm:w-36 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
-                                            <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.to} onChange={e => handleLegChange(leg.id, 'to', e.target.value)} className="w-28 sm:w-36 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
-                                            <td className="px-2 py-1"><input type="number" value={leg.distNM} onChange={e => handleLegChange(leg.id, 'distNM', e.target.value)} className="w-12 sm:w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                            <td className="px-2 py-1 font-mono text-center text-gray-600 dark:text-gray-400">{leg.flightTimeStr}</td>
-                                            <td className="px-2 py-1 font-mono text-center text-gray-600 dark:text-gray-400">{leg.timeOverPoint}</td>
-                                            <td className="px-2 py-1 text-center font-medium text-aviation-blue dark:text-blue-400">{leg.fuelUsed.toFixed(1)}</td>
-
-                                            <td className="px-2 py-1"><input type="text" placeholder="°" value={leg.heading} onChange={e => handleLegChange(leg.id, 'heading', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                            <td className="px-2 py-1"><input type="text" placeholder="°" value={leg.windDir} onChange={e => handleLegChange(leg.id, 'windDir', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                            <td className="px-2 py-1"><input type="number" placeholder="KT" value={leg.windSpeed} onChange={e => handleLegChange(leg.id, 'windSpeed', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                            <td className="px-2 py-1"><input type="text" value={leg.altitude} onChange={e => handleLegChange(leg.id, 'altitude', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                            <td className="px-2 py-1"><input type="number" placeholder="°C" value={leg.temperature} onChange={e => handleLegChange(leg.id, 'temperature', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-
-                                            <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400 font-bold">
-                                                {leg.calculatedTAS > 0 ? Math.round(leg.calculatedTAS) : '-'}
-                                            </td>
-                                            <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400">
-                                                {leg.calculatedWCA !== 0 ? (leg.calculatedWCA > 0 ? `+${leg.calculatedWCA.toFixed(0)}°` : `${leg.calculatedWCA.toFixed(0)}°`) : '-'}
-                                            </td>
-                                            <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400 font-bold">
-                                                {Math.round(leg.calculatedGS)}
-                                            </td>
-
-                                            <td className="px-2 py-1">
-                                                <select value={leg.trend} onChange={e => handleLegChange(leg.id, 'trend', e.target.value)} className="w-20 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600">
-                                                    <option value="">-</option>
-                                                    <option value="climb">{t('navPlanner.trendOptions.climb')}</option>
-                                                    <option value="descent">{t('navPlanner.trendOptions.descent')}</option>
-                                                    <option value="noChange">{t('navPlanner.trendOptions.noChange')}</option>
-                                                </select>
-                                            </td>
-                                            <td className="px-2 py-1"><input type="text" value={leg.control} onChange={e => handleLegChange(leg.id, 'control', e.target.value)} className="w-20 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
-
-                                            <td className="px-2 py-1"><input type="text" value={leg.primaryFreq} onChange={e => handleLegChange(leg.id, 'primaryFreq', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                            <td className="px-2 py-1"><input type="text" value={leg.secondaryFreq} onChange={e => handleLegChange(leg.id, 'secondaryFreq', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-
-                                            <td className="px-2 py-1"><input type="text" value={leg.vorName} onChange={e => handleLegChange(leg.id, 'vorName', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
-                                            <td className="px-2 py-1"><input type="text" value={leg.vorRadial} onChange={e => handleLegChange(leg.id, 'vorRadial', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-                                            <td className="px-2 py-1"><input type="text" value={leg.vorDist} onChange={e => handleLegChange(leg.id, 'vorDist', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
-
-                                            <td className="px-2 py-1 text-center whitespace-nowrap">
-                                                <button onClick={() => insertLeg(index + 1)} title={t('navPlanner.insertLeg')} className="text-green-500 hover:text-green-700 transition-colors p-1">
-                                                    <PlusCircle className="h-4 w-4" />
-                                                </button>
-                                                <button onClick={() => removeLeg(leg.id)} title={t('navPlanner.removeLeg')} className="text-red-500 hover:text-red-700 transition-colors p-1">
-                                                    <Trash2 className="h-4 w-4" />
-                                                </button>
-                                            </td>
+                            <div className="overflow-x-auto">
+                                <table className="w-full min-w-max text-sm text-left">
+                                    <thead className="text-xs text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 whitespace-nowrap">
+                                        <tr>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.from')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.to')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.dist')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.time')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.timeOverPoint')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.fuelGal')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.heading')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.windDir')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.windSpeed')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.altitude')}</th>
+                                            <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.temperature')}</th>
+                                            <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.tas')}</th>
+                                            <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.wca')}</th>
+                                            <th className="px-3 py-2 text-center">{t('navPlanner.legsTable.gs')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.trend')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.control')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.primaryFreq')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.secondaryFreq')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.vorName')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.vorRadial')}</th>
+                                            <th className="px-3 py-2">{t('navPlanner.legsTable.vorDist')}</th>
+                                            <th className="px-3 py-2 text-center whitespace-nowrap">+/-</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                            {legs.length === 0 && (
-                                <div className="py-8 text-center text-gray-500 italic">
-                                    No legs added yet. Click "Add Leg" to start.
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                                    </thead>
+                                    <tbody>
+                                        {calculatedLegs.map((leg, index) => (
+                                            <tr key={leg.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                                <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.from} onChange={e => handleLegChange(leg.id, 'from', e.target.value)} className="w-28 sm:w-36 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
+                                                <td className="px-2 py-1"><input type="text" list="waypoints-list" value={leg.to} onChange={e => handleLegChange(leg.id, 'to', e.target.value)} className="w-28 sm:w-36 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
+                                                <td className="px-2 py-1"><input type="number" value={leg.distNM} onChange={e => handleLegChange(leg.id, 'distNM', e.target.value)} className="w-12 sm:w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                                <td className="px-2 py-1 font-mono text-center text-gray-600 dark:text-gray-400">{leg.flightTimeStr}</td>
+                                                <td className="px-2 py-1 font-mono text-center text-gray-600 dark:text-gray-400">{leg.timeOverPoint}</td>
+                                                <td className="px-2 py-1 text-center font-medium text-aviation-blue dark:text-blue-400">{leg.fuelUsed.toFixed(1)}</td>
 
-                    {/* Summary Grid */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-                        <div className="bg-aviation-blue px-4 py-3">
-                            <h3 className="text-lg font-bold text-white">{t('navPlanner.summary.title')}</h3>
-                        </div>
-                        <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-3">
-                                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                                    <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.totalTime')}</span>
-                                    <span className="font-mono bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded text-lg font-bold">{formatDuration(totalTimeHours)}</span>
-                                </div>
-                                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                                    <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.totalDist')}</span>
-                                    <span className="font-mono px-3 py-1 rounded text-lg font-bold">{totalDist.toFixed(1)} NM</span>
-                                </div>
-                            </div>
-                            <div className="space-y-3">
-                                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                                    <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reserve45')}</span>
-                                    <span className="font-mono text-yellow-600 dark:text-yellow-400 font-bold">{reserve45.toFixed(1)}</span>
-                                </div>
-                                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                                    <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reqFuelNoReserve')}</span>
-                                    <span className="font-mono">{reqFuelNoReserve.toFixed(1)}</span>
-                                </div>
-                                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 bg-green-50 dark:bg-green-900/20 px-2 rounded">
-                                    <span className="text-gray-700 dark:text-gray-300 font-bold">{t('navPlanner.summary.reqFuel45Min')}</span>
-                                    <span className="font-mono text-green-700 dark:text-green-400 font-bold text-lg">{reqFuel45Min.toFixed(1)}</span>
-                                </div>
-                                <div className="flex justify-between items-center py-2 px-2">
-                                    <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reqFuel60Min')}</span>
-                                    <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">{reqFuel60Min.toFixed(1)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                                <td className="px-2 py-1"><input type="text" placeholder="°" value={leg.heading} onChange={e => handleLegChange(leg.id, 'heading', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                                <td className="px-2 py-1"><input type="text" placeholder="°" value={leg.windDir} onChange={e => handleLegChange(leg.id, 'windDir', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                                <td className="px-2 py-1"><input type="number" placeholder="KT" value={leg.windSpeed} onChange={e => handleLegChange(leg.id, 'windSpeed', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                                <td className="px-2 py-1"><input type="text" value={leg.altitude} onChange={e => handleLegChange(leg.id, 'altitude', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                                <td className="px-2 py-1"><input type="number" placeholder="°C" value={leg.temperature} onChange={e => handleLegChange(leg.id, 'temperature', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
 
-                    {/* Flight Status (Moved to Bottom) */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 mt-8">
-                        <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.flightStatus')}</h3>
-                        </div>
-                        <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                            <div className="grid grid-cols-3 items-center gap-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotName')}</label>
-                                <input type="text" value={details.pilotName} onChange={e => handleDetailChange('pilotName', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
-                            </div>
-                            <div className="grid grid-cols-3 items-center gap-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotLicense')}</label>
-                                <input type="text" value={details.pilotLicense} onChange={e => handleDetailChange('pilotLicense', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
-                            </div>
-                            <div className="grid grid-cols-3 items-center gap-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotPhone')}</label>
-                                <input type="text" value={details.pilotPhone} onChange={e => handleDetailChange('pilotPhone', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
-                            </div>
-                            <div className="grid grid-cols-3 items-center gap-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotEmail')}</label>
-                                <input type="email" value={details.pilotEmail} onChange={e => handleDetailChange('pilotEmail', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
-                            </div>
+                                                <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400 font-bold">
+                                                    {leg.calculatedTAS > 0 ? Math.round(leg.calculatedTAS) : '-'}
+                                                </td>
+                                                <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400">
+                                                    {leg.calculatedWCA !== 0 ? (leg.calculatedWCA > 0 ? `+${leg.calculatedWCA.toFixed(0)}°` : `${leg.calculatedWCA.toFixed(0)}°`) : '-'}
+                                                </td>
+                                                <td className="px-2 py-1 text-center font-mono text-xs text-gray-600 dark:text-gray-400 font-bold">
+                                                    {Math.round(leg.calculatedGS)}
+                                                </td>
 
-                            <div className="grid grid-cols-3 items-center gap-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.departureDest')}</label>
-                                <div className="col-span-2 flex gap-2">
-                                    <input type="text" value={details.origin} readOnly className="flex-1 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" placeholder={t('navPlanner.origin')} />
-                                    <input type="text" value={details.finalDest} readOnly className="flex-1 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" placeholder={t('navPlanner.finalDest')} />
+                                                <td className="px-2 py-1">
+                                                    <select value={leg.trend} onChange={e => handleLegChange(leg.id, 'trend', e.target.value)} className="w-20 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600">
+                                                        <option value="">-</option>
+                                                        <option value="climb">{t('navPlanner.trendOptions.climb')}</option>
+                                                        <option value="descent">{t('navPlanner.trendOptions.descent')}</option>
+                                                        <option value="noChange">{t('navPlanner.trendOptions.noChange')}</option>
+                                                    </select>
+                                                </td>
+                                                <td className="px-2 py-1"><input type="text" value={leg.control} onChange={e => handleLegChange(leg.id, 'control', e.target.value)} className="w-20 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
+
+                                                <td className="px-2 py-1"><input type="text" value={leg.primaryFreq} onChange={e => handleLegChange(leg.id, 'primaryFreq', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                                <td className="px-2 py-1"><input type="text" value={leg.secondaryFreq} onChange={e => handleLegChange(leg.id, 'secondaryFreq', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+
+                                                <td className="px-2 py-1"><input type="text" value={leg.vorName} onChange={e => handleLegChange(leg.id, 'vorName', e.target.value)} className="w-16 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600" /></td>
+                                                <td className="px-2 py-1"><input type="text" value={leg.vorRadial} onChange={e => handleLegChange(leg.id, 'vorRadial', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+                                                <td className="px-2 py-1"><input type="text" value={leg.vorDist} onChange={e => handleLegChange(leg.id, 'vorDist', e.target.value)} className="w-12 p-1 border rounded text-xs bg-white dark:bg-gray-800 dark:border-gray-600 text-center" /></td>
+
+                                                <td className="px-2 py-1 text-center whitespace-nowrap">
+                                                    <button onClick={() => insertLeg(index + 1)} title={t('navPlanner.insertLeg')} className="text-green-500 hover:text-green-700 transition-colors p-1">
+                                                        <PlusCircle className="h-4 w-4" />
+                                                    </button>
+                                                    <button onClick={() => removeLeg(leg.id)} title={t('navPlanner.removeLeg')} className="text-red-500 hover:text-red-700 transition-colors p-1">
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                {legs.length === 0 && (
+                                    <div className="py-8 text-center text-gray-500 italic">
+                                        No legs added yet. Click "Add Leg" to start.
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Summary Grid */}
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                            <div className="bg-aviation-blue px-4 py-3">
+                                <h3 className="text-lg font-bold text-white">{t('navPlanner.summary.title')}</h3>
+                            </div>
+                            <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                                        <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.totalTime')}</span>
+                                        <span className="font-mono bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded text-lg font-bold">{formatDuration(totalTimeHours)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                                        <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.totalDist')}</span>
+                                        <span className="font-mono px-3 py-1 rounded text-lg font-bold">{totalDist.toFixed(1)} NM</span>
+                                    </div>
+                                </div>
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                                        <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reserve45')}</span>
+                                        <span className="font-mono text-yellow-600 dark:text-yellow-400 font-bold">{reserve45.toFixed(1)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                                        <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reqFuelNoReserve')}</span>
+                                        <span className="font-mono">{reqFuelNoReserve.toFixed(1)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 bg-green-50 dark:bg-green-900/20 px-2 rounded">
+                                        <span className="text-gray-700 dark:text-gray-300 font-bold">{t('navPlanner.summary.reqFuel45Min')}</span>
+                                        <span className="font-mono text-green-700 dark:text-green-400 font-bold text-lg">{reqFuel45Min.toFixed(1)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center py-2 px-2">
+                                        <span className="text-gray-600 dark:text-gray-400 font-medium">{t('navPlanner.summary.reqFuel60Min')}</span>
+                                        <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">{reqFuel60Min.toFixed(1)}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-3 items-center gap-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.paxCount')}</label>
-                                <input type="text" value={details.paxCount} onChange={e => handleDetailChange('paxCount', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                        </div>
+
+                        {/* Flight Status */}
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 mt-8">
+                            <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('navPlanner.flightStatus')}</h3>
                             </div>
-                            <div className="grid grid-cols-3 items-center gap-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.flightEndurance')}</label>
-                                <input type="text" value={details.flightEndurance} onChange={e => handleDetailChange('flightEndurance', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
-                            </div>
-                            <div className="grid grid-cols-3 items-center gap-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.aircraftType')}</label>
-                                <input type="text" value="Cessna 172" readOnly className="col-span-2 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" />
-                            </div>
-                            <div className="grid grid-cols-3 items-center gap-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.flightRules')}</label>
-                                <select value={details.flightRules} onChange={e => handleDetailChange('flightRules', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center font-bold">
-                                    <option value="V">VFR</option>
-                                    <option value="I">IFR</option>
-                                </select>
-                            </div>
-                            <div className="grid grid-cols-3 items-center gap-2 md:col-start-1">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.callsign')}</label>
-                                <select value={details.callsign} onChange={e => handleDetailChange('callsign', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center font-bold">
-                                    {callsignOptions.map(opt => <option key={`callsign-${opt}`} value={opt}>{opt || '---'}</option>)}
-                                </select>
+                            <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                                <div className="grid grid-cols-3 items-center gap-2">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotName')}</label>
+                                    <input type="text" value={details.pilotName} onChange={e => handleDetailChange('pilotName', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                                </div>
+                                <div className="grid grid-cols-3 items-center gap-2">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotLicense')}</label>
+                                    <input type="text" value={details.pilotLicense} onChange={e => handleDetailChange('pilotLicense', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                                </div>
+                                <div className="grid grid-cols-3 items-center gap-2">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotPhone')}</label>
+                                    <input type="text" value={details.pilotPhone} onChange={e => handleDetailChange('pilotPhone', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                                </div>
+                                <div className="grid grid-cols-3 items-center gap-2">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.pilotEmail')}</label>
+                                    <input type="email" value={details.pilotEmail} onChange={e => handleDetailChange('pilotEmail', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                                </div>
+
+                                <div className="grid grid-cols-3 items-center gap-2">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.departureDest')}</label>
+                                    <div className="col-span-2 flex gap-2">
+                                        <input type="text" value={details.origin} readOnly className="flex-1 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" placeholder={t('navPlanner.origin')} />
+                                        <input type="text" value={details.finalDest} readOnly className="flex-1 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" placeholder={t('navPlanner.finalDest')} />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-3 items-center gap-2">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.paxCount')}</label>
+                                    <input type="text" value={details.paxCount} onChange={e => handleDetailChange('paxCount', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                                </div>
+                                <div className="grid grid-cols-3 items-center gap-2">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.flightEndurance')}</label>
+                                    <input type="text" value={details.flightEndurance} onChange={e => handleDetailChange('flightEndurance', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center" />
+                                </div>
+                                <div className="grid grid-cols-3 items-center gap-2">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.aircraftType')}</label>
+                                    <input type="text" value="Cessna 172" readOnly className="col-span-2 p-1.5 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-sm text-center text-gray-500" />
+                                </div>
+                                <div className="grid grid-cols-3 items-center gap-2">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.flightRules')}</label>
+                                    <select value={details.flightRules} onChange={e => handleDetailChange('flightRules', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center font-bold">
+                                        <option value="V">VFR</option>
+                                        <option value="I">IFR</option>
+                                    </select>
+                                </div>
+                                <div className="grid grid-cols-3 items-center gap-2 md:col-start-1">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 col-span-1">{t('navPlanner.callsign')}</label>
+                                    <select value={details.callsign} onChange={e => handleDetailChange('callsign', e.target.value)} className="col-span-2 p-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-center font-bold">
+                                        {callsignOptions.map(opt => <option key={`callsign-${opt}`} value={opt}>{opt || '---'}</option>)}
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
@@ -855,214 +861,214 @@ export default function NavigationPlanner() {
                             )}
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {activeTab === 'map' && (
-                <div className="animate-in fade-in duration-300">
-                    <FlightMap legs={calculatedLegs} origin={details.origin} finalDest={details.finalDest} />
-                </div>
-            )}
+                {activeTab === 'map' && (
+                    <div className="animate-in fade-in duration-300">
+                        <FlightMap legs={calculatedLegs} origin={details.origin} finalDest={details.finalDest} />
+                    </div>
+                )}
 
-            {activeTab === 'weather' && (
-                <WeatherTab />
-            )}
+                {activeTab === 'weather' && (
+                    <WeatherTab />
+                )}
 
-            {activeTab === 'notams' && (
-                <div className="animate-in fade-in duration-300 space-y-6">
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-                        <div className="bg-aviation-blue px-4 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                            {/* Title & Mobile Refresh */}
-                            <div className="flex items-center justify-between w-full sm:w-auto gap-2">
-                                <div className="flex items-center gap-3 min-w-0">
-                                    <AlertTriangle className="h-6 w-6 text-white shrink-0" />
-                                    <h3 className="text-xl font-bold text-white truncate">
-                                        {t('navPlanner.notams.title', 'NOTAMs List')} <span className="text-sm font-normal opacity-75 hidden xs:inline">(notammap.org)</span>
-                                    </h3>
-                                </div>
-                            </div>
-
-                            {/* Actions Box */}
-                            <div className="flex flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto text-white mt-1 sm:mt-0">
-                                {/* Mobile Refresh */}
-                                <button
-                                    onClick={fetchNotams}
-                                    disabled={isLoadingNotams}
-                                    className={`sm:hidden shrink-0 flex items-center justify-center p-2 bg-white/10 text-white hover:text-blue-200 border border-white/20 rounded-lg hover:bg-white/20 transition ${isLoadingNotams ? "opacity-50" : ""}`}
-                                    title={t('navPlanner.notams.refresh', 'Refresh NOTAMs')}
-                                >
-                                    <RefreshCw className={`h-4 w-4 ${isLoadingNotams ? 'animate-spin' : ''}`} strokeWidth={2} />
-                                    {notamsFileDate && (
-                                        <span className="text-xs font-semibold ml-1.5 whitespace-nowrap">
-                                            {new Date(notamsFileDate).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}
-                                        </span>
-                                    )}
-                                </button>
-
-                                {/* Raw / Decoded Toggles */}
-                                <div className="bg-white/10 p-1 rounded-lg flex items-center flex-1 sm:flex-none">
-                                    <button
-                                        onClick={() => setNotamViewMode('raw')}
-                                        className={`flex-1 sm:flex-none justify-center px-2 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 ${notamViewMode === 'raw' ? 'bg-white text-aviation-blue shadow-sm' : 'text-white hover:bg-white/20'}`}
-                                    >
-                                        <Code className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                        {t('navPlanner.notams.raw', 'Raw')}
-                                    </button>
-                                    <button
-                                        onClick={() => setNotamViewMode('decoded')}
-                                        className={`flex-1 sm:flex-none justify-center px-2 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 ${notamViewMode === 'decoded' ? 'bg-white text-aviation-blue shadow-sm' : 'text-white hover:bg-white/20'}`}
-                                    >
-                                        <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                        {t('navPlanner.notams.decoded', 'Decoded')}
-                                    </button>
+                {activeTab === 'notams' && (
+                    <div className="animate-in fade-in duration-300 space-y-6">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                            <div className="bg-aviation-blue px-4 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                {/* Title & Mobile Refresh */}
+                                <div className="flex items-center justify-between w-full sm:w-auto gap-2">
+                                    <div className="flex items-center gap-3 min-w-0">
+                                        <AlertTriangle className="h-6 w-6 text-white shrink-0" />
+                                        <h3 className="text-xl font-bold text-white truncate">
+                                            {t('navPlanner.notams.title', 'NOTAMs List')} <span className="text-sm font-normal opacity-75 hidden xs:inline">(notammap.org)</span>
+                                        </h3>
+                                    </div>
                                 </div>
 
-                                {/* Desktop Refresh & Time */}
-                                <div className="hidden sm:flex items-center gap-4">
-                                    {notamsFileDate && (
-                                        <span className="text-sm opacity-90 font-mono">
-                                            {t('navPlanner.weather.lastUpdate', 'Last Updated:')} {new Date(notamsFileDate).toLocaleString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                                        </span>
-                                    )}
+                                {/* Actions Box */}
+                                <div className="flex flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto text-white mt-1 sm:mt-0">
+                                    {/* Mobile Refresh */}
                                     <button
                                         onClick={fetchNotams}
                                         disabled={isLoadingNotams}
-                                        className={`p-1.5 text-white hover:text-blue-200 rounded-lg hover:bg-white/10 transition ${isLoadingNotams ? "opacity-50" : ""}`}
+                                        className={`sm:hidden shrink-0 flex items-center justify-center p-2 bg-white/10 text-white hover:text-blue-200 border border-white/20 rounded-lg hover:bg-white/20 transition ${isLoadingNotams ? "opacity-50" : ""}`}
                                         title={t('navPlanner.notams.refresh', 'Refresh NOTAMs')}
                                     >
-                                        <RefreshCw className={`h-[18px] w-[18px] ${isLoadingNotams ? 'animate-spin' : ''}`} strokeWidth={2} />
+                                        <RefreshCw className={`h-4 w-4 ${isLoadingNotams ? 'animate-spin' : ''}`} strokeWidth={2} />
+                                        {notamsFileDate && (
+                                            <span className="text-xs font-semibold ml-1.5 whitespace-nowrap">
+                                                {new Date(notamsFileDate).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}
+                                            </span>
+                                        )}
                                     </button>
+
+                                    {/* Raw / Decoded Toggles */}
+                                    <div className="bg-white/10 p-1 rounded-lg flex items-center flex-1 sm:flex-none">
+                                        <button
+                                            onClick={() => setNotamViewMode('raw')}
+                                            className={`flex-1 sm:flex-none justify-center px-2 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 ${notamViewMode === 'raw' ? 'bg-white text-aviation-blue shadow-sm' : 'text-white hover:bg-white/20'}`}
+                                        >
+                                            <Code className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                            {t('navPlanner.notams.raw', 'Raw')}
+                                        </button>
+                                        <button
+                                            onClick={() => setNotamViewMode('decoded')}
+                                            className={`flex-1 sm:flex-none justify-center px-2 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 ${notamViewMode === 'decoded' ? 'bg-white text-aviation-blue shadow-sm' : 'text-white hover:bg-white/20'}`}
+                                        >
+                                            <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                            {t('navPlanner.notams.decoded', 'Decoded')}
+                                        </button>
+                                    </div>
+
+                                    {/* Desktop Refresh & Time */}
+                                    <div className="hidden sm:flex items-center gap-4">
+                                        {notamsFileDate && (
+                                            <span className="text-sm opacity-90 font-mono">
+                                                {t('navPlanner.weather.lastUpdate', 'Last Updated:')} {new Date(notamsFileDate).toLocaleString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                            </span>
+                                        )}
+                                        <button
+                                            onClick={fetchNotams}
+                                            disabled={isLoadingNotams}
+                                            className={`p-1.5 text-white hover:text-blue-200 rounded-lg hover:bg-white/10 transition ${isLoadingNotams ? "opacity-50" : ""}`}
+                                            title={t('navPlanner.notams.refresh', 'Refresh NOTAMs')}
+                                        >
+                                            <RefreshCw className={`h-[18px] w-[18px] ${isLoadingNotams ? 'animate-spin' : ''}`} strokeWidth={2} />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/20">
-                            <div className="relative max-w-sm">
-                                <Search className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                                <input
-                                    type="text"
-                                    placeholder={t('navPlanner.notams.searchPlaceholder', 'Search by ID or text...')}
-                                    className="w-full pl-9 pr-4 rtl:pr-9 rtl:pl-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-900 focus:ring-2 focus:ring-aviation-blue focus:border-transparent outline-none transition-shadow text-gray-900 dark:text-gray-100"
-                                    value={notamsSearch}
-                                    onChange={(e) => setNotamsSearch(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="p-4">
-                            {isLoadingNotams ? (
-                                <div className="flex justify-center items-center py-12">
-                                    <svg className="animate-spin h-8 w-8 text-aviation-blue" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
+                            <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/20">
+                                <div className="relative max-w-sm">
+                                    <Search className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                                    <input
+                                        type="text"
+                                        placeholder={t('navPlanner.notams.searchPlaceholder', 'Search by ID or text...')}
+                                        className="w-full pl-9 pr-4 rtl:pr-9 rtl:pl-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-900 focus:ring-2 focus:ring-aviation-blue focus:border-transparent outline-none transition-shadow text-gray-900 dark:text-gray-100"
+                                        value={notamsSearch}
+                                        onChange={(e) => setNotamsSearch(e.target.value)}
+                                    />
                                 </div>
-                            ) : filteredNotams.length > 0 ? (
-                                <div className="space-y-4">
-                                    {filteredNotams.map(n => {
-                                        const notam = n.notam;
-                                        return (
-                                            <div key={n.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-900/50 hover:bg-white dark:hover:bg-gray-800 transition-colors">
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <span className="font-bold text-red-600 text-lg">NOTAM: {notam.series}{notam.number}/{notam.year}</span>
-                                                    {(() => {
-                                                        const rawText = notam.raw || notam.notamText || '';
-                                                        const match = rawText.match(/CREATED:\s*(\d{2}\s+\w{3}\s+\d{4}\s+\d{2}:\d{2})/i);
-                                                        return match ? (
-                                                            <span className="text-xs text-gray-500 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded whitespace-nowrap">
-                                                                {match[1]}
-                                                            </span>
-                                                        ) : null;
-                                                    })()}
-                                                </div>
+                            </div>
 
-                                                {notamViewMode === 'raw' ? (
-                                                    <pre className="text-sm whitespace-pre-wrap font-mono m-0 text-gray-800 dark:text-gray-300">
-                                                        {notam.raw || notam.notamText}
-                                                    </pre>
-                                                ) : (
-                                                    <div className="space-y-3">
+                            <div className="p-4">
+                                {isLoadingNotams ? (
+                                    <div className="flex justify-center items-center py-12">
+                                        <svg className="animate-spin h-8 w-8 text-aviation-blue" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                    </div>
+                                ) : filteredNotams.length > 0 ? (
+                                    <div className="space-y-4">
+                                        {filteredNotams.map(n => {
+                                            const notam = n.notam;
+                                            return (
+                                                <div key={n.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-900/50 hover:bg-white dark:hover:bg-gray-800 transition-colors">
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <span className="font-bold text-red-600 text-lg">NOTAM: {notam.series}{notam.number}/{notam.year}</span>
                                                         {(() => {
                                                             const rawText = notam.raw || notam.notamText || '';
-                                                            try {
-                                                                const decoded = decode(rawText);
-                                                                return (
-                                                                    <div className="text-sm text-gray-800 dark:text-gray-200">
-                                                                        {/* Decoded Title & Location */}
-                                                                        {(decoded.title || decoded.fir) && (
-                                                                            <div className="mb-2 font-semibold text-aviation-blue dark:text-blue-400">
-                                                                                {decoded.fir && <span className="mr-2">[{decoded.fir}]</span>}
-                                                                                {decoded.title}
-                                                                            </div>
-                                                                        )}
-
-                                                                        {/* Human Readable Text */}
-                                                                        <div className="bg-white/50 dark:bg-black/20 p-3 rounded border border-gray-100 dark:border-gray-800 mb-2 whitespace-pre-wrap leading-relaxed">
-                                                                            {decoded.text}
-                                                                        </div>
-
-                                                                        {/* Details (Dates, Rules) */}
-                                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400 mt-2">
-                                                                            {decoded.duration && (
-                                                                                <div>
-                                                                                    <strong>Valid: </strong><br />
-                                                                                    {new Date(decoded.duration.dateBegin).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}
-                                                                                    {' - '}
-                                                                                    {decoded.duration.permanent ? 'Permanent' : (decoded.duration.dateEnd ? new Date(decoded.duration.dateEnd).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' }) : 'Unknown')}
-                                                                                </div>
-                                                                            )}
-                                                                            {decoded.rules && decoded.rules.length > 0 && (
-                                                                                <div>
-                                                                                    <strong>Rules: </strong>
-                                                                                    {decoded.rules.join(', ')}
-                                                                                </div>
-                                                                            )}
-                                                                        </div>
-                                                                    </div>
-                                                                );
-                                                            } catch {
-                                                                // On decode fail, fallback to raw gracefully
-                                                                return (
-                                                                    <pre className="text-sm whitespace-pre-wrap font-mono m-0 text-gray-800 dark:text-gray-300">
-                                                                        {rawText}
-                                                                    </pre>
-                                                                );
-                                                            }
+                                                            const match = rawText.match(/CREATED:\s*(\d{2}\s+\w{3}\s+\d{4}\s+\d{2}:\d{2})/i);
+                                                            return match ? (
+                                                                <span className="text-xs text-gray-500 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded whitespace-nowrap">
+                                                                    {match[1]}
+                                                                </span>
+                                                            ) : null;
                                                         })()}
                                                     </div>
-                                                )}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            ) : (
-                                <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                                    {notamsSearch ? t('navPlanner.notams.noResults', 'No NOTAMs matched your search.') : t('navPlanner.notams.empty', 'No NOTAMs available.')}
-                                </div>
-                            )}
+
+                                                    {notamViewMode === 'raw' ? (
+                                                        <pre className="text-sm whitespace-pre-wrap font-mono m-0 text-gray-800 dark:text-gray-300">
+                                                            {notam.raw || notam.notamText}
+                                                        </pre>
+                                                    ) : (
+                                                        <div className="space-y-3">
+                                                            {(() => {
+                                                                const rawText = notam.raw || notam.notamText || '';
+                                                                try {
+                                                                    const decoded = decode(rawText);
+                                                                    return (
+                                                                        <div className="text-sm text-gray-800 dark:text-gray-200">
+                                                                            {/* Decoded Title & Location */}
+                                                                            {(decoded.title || decoded.fir) && (
+                                                                                <div className="mb-2 font-semibold text-aviation-blue dark:text-blue-400">
+                                                                                    {decoded.fir && <span className="mr-2">[{decoded.fir}]</span>}
+                                                                                    {decoded.title}
+                                                                                </div>
+                                                                            )}
+
+                                                                            {/* Human Readable Text */}
+                                                                            <div className="bg-white/50 dark:bg-black/20 p-3 rounded border border-gray-100 dark:border-gray-800 mb-2 whitespace-pre-wrap leading-relaxed">
+                                                                                {decoded.text}
+                                                                            </div>
+
+                                                                            {/* Details (Dates, Rules) */}
+                                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400 mt-2">
+                                                                                {decoded.duration && (
+                                                                                    <div>
+                                                                                        <strong>Valid: </strong><br />
+                                                                                        {new Date(decoded.duration.dateBegin).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}
+                                                                                        {' - '}
+                                                                                        {decoded.duration.permanent ? 'Permanent' : (decoded.duration.dateEnd ? new Date(decoded.duration.dateEnd).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' }) : 'Unknown')}
+                                                                                    </div>
+                                                                                )}
+                                                                                {decoded.rules && decoded.rules.length > 0 && (
+                                                                                    <div>
+                                                                                        <strong>Rules: </strong>
+                                                                                        {decoded.rules.join(', ')}
+                                                                                    </div>
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    );
+                                                                } catch {
+                                                                    // On decode fail, fallback to raw gracefully
+                                                                    return (
+                                                                        <pre className="text-sm whitespace-pre-wrap font-mono m-0 text-gray-800 dark:text-gray-300">
+                                                                            {rawText}
+                                                                        </pre>
+                                                                    );
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                                        {notamsSearch ? t('navPlanner.notams.noResults', 'No NOTAMs matched your search.') : t('navPlanner.notams.empty', 'No NOTAMs available.')}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-            )
-            }
-            {/* Datalist for Airports */}
-            <datalist id="airports-list">
-                {airportOptions
-                    .filter(opt => opt.code !== '')
-                    .filter((opt, index, self) => index === self.findIndex((t) => t.code === opt.code))
-                    .map(opt => (
-                        <option key={`dl-apt-${opt.code}`} value={opt.label} />
-                    ))}
-            </datalist>
+                )
+                }
+                {/* Datalist for Airports */}
+                <datalist id="airports-list">
+                    {airportOptions
+                        .filter(opt => opt.code !== '')
+                        .filter((opt, index, self) => index === self.findIndex((t) => t.code === opt.code))
+                        .map(opt => (
+                            <option key={`dl-apt-${opt.code}`} value={opt.label} />
+                        ))}
+                </datalist>
 
-            {/* Datalist for Waypoints */}
-            <datalist id="waypoints-list">
-                {waypoints
-                    .filter((wp, index, self) => index === self.findIndex((t) => t.code === wp.code))
-                    .map(wp => (
-                        <option key={wp.code} value={`${wp.code} - ${wp.name}`} />
-                    ))}
-            </datalist>
-        </div >
+                {/* Datalist for Waypoints */}
+                <datalist id="waypoints-list">
+                    {waypoints
+                        .filter((wp, index, self) => index === self.findIndex((t) => t.code === wp.code))
+                        .map(wp => (
+                            <option key={wp.code} value={`${wp.code} - ${wp.name}`} />
+                        ))}
+                </datalist>
+            </div>
+        </div>
     );
 }
