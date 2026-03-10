@@ -20,7 +20,7 @@ const SEO = ({ title, description, keywords, url = window.location.href, ogType 
     const isRtl = lang === 'he';
 
     // Fallback defaults using i18n
-    const defaultTitle = t('app.title', 'Cessna 172 IL Performance');
+    const defaultTitle = t('app.title', 'Cessna 172 IL Pilot tools');
     const defaultDescription = t('app.description', 'Pilot tools and performance calculators for the Cessna 172 in Israel.');
     const defaultKeywords = 'Cessna 172, aviation, performance, weight and balance, navigation, flight planning, Israel, C172, NOTAM, AVIATION WEATHER, LLHZ, שדה התעופה הרצליה';
 
